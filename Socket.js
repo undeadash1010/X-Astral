@@ -53,7 +53,7 @@ async function startBot() {
                     if (Content_pdate) {
                         const anti_del = `🔴 *Anti-Delete Alert* 🔴\n\n` +
                             `👤 *Sender*: @${gender}\n` +
-                            `⌚ *Time*: [${new Date().toLocaleString()}]`\n +
+                            `⌚ *Time*: ${new Date().toLocaleString()}\n` +
                             `📜 *Message*: ${Content_pdate}\n` +
                             `🚨 *Note*: Deleted`;
                         await sock.sendMessage(remoteJid, {
