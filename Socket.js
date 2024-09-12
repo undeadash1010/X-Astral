@@ -423,7 +423,7 @@ for (let participant of participants) {
             console.log(chalk.magenta('_Connected_'));
         }
     });
-}
+       
 sock.ev.on('call', async (update) => {
     const { id, from, isVideo, isGroupCall } = update;
     if (isGroupCall) return;
@@ -433,4 +433,5 @@ sock.ev.on('call', async (update) => {
     }
 });
 
-startBot();       
+startBot()
+});       
