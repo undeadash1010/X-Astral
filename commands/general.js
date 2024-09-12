@@ -1,8 +1,46 @@
 const { commands, Meta, Unicode } = require('../lib/');
 const config = require('../config');
+const os = require('os');
+const config = require('../config');
 
 Meta({
+   command: 'help',
+   category: 'general',
+   usage: '<cmd$>',
+   handler: async (sock, message, args, author) => {
+       
+       const { from } = message;
+       const ramInGB = os.totalmem() / (1024 * 1024 * 1024);
+       const freeRamInGB = os.freemem() / (1024 * 1024 * 1024);
+       const ip = Object.values(os.networkInterfaces())
+            .flat()
+            .find((iface) => iface.family === 'IPv4' && !iface.internal)?.address || '';
+       
+       let res = `╭──⎔ *X-ASTRAL* ⎔\n`;
+       res += `┣ BotName: ${config.BOTNAME}\n`;
+       res += `┣ Version: ${config.VERSION}\n`;
+       res += `┣ OS: ${os.type()}\n`;
+       res += `┣ Memory: ${freeRamInGB.toFixed(2)} / ${ramInGB.toFixed(2)} GB\n`;
+       res += `┣ IP: ${ip}\n`;
+       res += `┣ Owner: ${config.OWNER}\n`;
+       res += `╰──⎔⎔\n`;
+       
+       res += `╭──⎔⎔ *WaBot*⎔⎔\n`;
+       res += `┣ commands: ${commands.length}\n`;
+       res += `╰──⎔⎔\n\n`;
+
+       commands.forEach(cmd => {
+           res += `┣ ${cmd.command} ${cmd.usage}\n`;
+       });
+
+       res += `╰──⎔⎔\n`;
+       await sock.sendMessage(from, { image: { text: res }, { quoted: message });
+   }
+});
+    
+Meta({
     command: 'menu',
+    usage: 'cmd$',
     handler: async (sock, args, message, author) => {
         const { from } = message;
       
@@ -64,7 +102,8 @@ Meta({
 
 Meta({
     command: 'alive',
-    category: 'utility',
+    category: 'general',
+    usage: 'cmd_alive$',
     handler: async (sock, args, message) => {
         const { from } = message;
         const alive_str = `
