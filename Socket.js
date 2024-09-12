@@ -308,7 +308,6 @@ if (new_level > before) {
                 }
             }
     
-    }
     });
 
    sock.ev.on('group-participants.update', async (event) => {
