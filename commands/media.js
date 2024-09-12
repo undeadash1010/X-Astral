@@ -1,6 +1,5 @@
 const { commands, Meta } = require('../lib/');
 const config = require('../config.js');
-const sharp = require('sharp');
 const { writeFileSync } = require('fs');
 const { MessageType, Mimetype } = require('@whiskeysockets/baileys');
 const ffmpeg = require('fluent-ffmpeg');
@@ -9,7 +8,7 @@ ffmpeg.setFfmpegPath(ffmpegPath);
 const axios = require('axios');
 const FormData = require('form-data');
 const fs = require('fs');
-const { exec } = require('child_process');
+const { exec, spawn } = require('child_process');
 const { promisify } = require('util');
 const unlinkAsync = promisify(fs.unlink);
 const { SpeechClient } = require('@google-cloud/speech');
@@ -72,23 +71,36 @@ Meta({
     command: 'resize',
     category: 'media',
     handler: async (sock, args, message, languages) => {
-      const { from } = message;
+        const { from } = message;
         const [width, height] = args;
         if (!width || !height || isNaN(width) || isNaN(height)) {
-            return sock.sendMessage(from, { text: 'Please specify valid width and height Usage: /resize 300 300' }, MessageType.text);
-        }     if (!message.message || !message.message.imageMessage) {
-            return sock.sendMessage(from, { text: languages[config.LANGUAGE].IMAGE_MSG }, MessageType.text);
-        }      const image_imgz = await sock.downloadMediaMessage(message);
-        try {
-            const to_harzad = await sharp(image_imgz)
-                .resize(parseInt(width), parseInt(height))
-                .toBuffer();
-            await sock.sendMessage(from, { image: to_harzad, caption: '*Made with love*' }, MessageType.image);
+            return sock.sendMessage(from, { text: 'Please specify valid width and height e.g: /resize 300 300' }, { quoted: message });
+        } if (!message.message || !message.message.imageMessage) {
+            return sock.sendMessage(from, { text: languages[config.LANGUAGE].IMAGE_MSG }, { quoted: message });
+        } const image_res = await sock.downloadMediaMessage(message); 
+        try { const ffmpegProcess = spawn('ffmpeg', [
+                '-i', 'pipe:0',                   
+                '-vf', `scale=${width}:${height}`, 
+                '-f', 'image2',                    
+                'pipe:1'                           
+            ]); ffmpegProcess.stdin.write(image_res);
+            ffmpegProcess.stdin.end();
+            let outputBuffer = [];
+            ffmpegProcess.stdout.on('data', (chunk) => {
+                outputBuffer.push(chunk);
+            }); ffmpegProcess.stdout.on('end', async () => {
+                const res_nes = Buffer.concat(outputBuffer); 
+                await sock.sendMessage(from, { image: res_nes, caption: '*Resized with ❤️*' }, { quoted: message });
+            });
+            ffmpegProcess.stderr.on('data', (data) => {
+                console.error(`${data}`);
+            });
         } catch (err) {
             console.error(err);
-            }
+        }
     }
 });
+            
             
 Meta({
   command: 'sticker',
