@@ -1,7 +1,5 @@
 const { commands, Meta, Unicode } = require('../lib/');
 const config = require('../config');
-const os = require('os');
-const config = require('../config');
 
 Meta({
    command: 'help',
@@ -10,12 +8,12 @@ Meta({
    handler: async (sock, message, args, author) => {
        
        const { from } = message;
+       const os = require('os'); 
        const ramInGB = os.totalmem() / (1024 * 1024 * 1024);
        const freeRamInGB = os.freemem() / (1024 * 1024 * 1024);
        const ip = Object.values(os.networkInterfaces())
             .flat()
-            .find((iface) => iface.family === 'IPv4' && !iface.internal)?.address || '';
-       
+            .find((iface) => iface.family === 'IPv4' && !iface.internal)?.address || '';       
        let res = `╭──⎔ *X-ASTRAL* ⎔\n`;
        res += `┣ BotName: ${config.BOTNAME}\n`;
        res += `┣ Version: ${config.VERSION}\n`;
@@ -34,9 +32,14 @@ Meta({
        });
 
        res += `╰──⎔⎔\n`;
-       await sock.sendMessage(from, { image: { text: res }, { quoted: message });
+       await sock.sendMessage(from, {
+           image: { url: 'https://www.imghippo.com/i/8B6KS1726150586.jpg' }, 
+           caption: res,
+           quoted: message
+       });
    }
 });
+                                
     
 Meta({
     command: 'menu',
@@ -114,7 +117,10 @@ Meta({
 📅 *Date:* ${new Date().toLocaleDateString()}
 
 ╰──────────╼
-`; await sock.sendMessage(from, { image: 'https://f.uguu.se/BuFAPRQO.jpg'{ text: alive_str }});
-    }
-});
-               
+`; await sock.sendMessage(from, { 
+           image: { url: 'https://f.uguu.se/BuFAPRQO.jpg'},
+           caption: alive_str,
+           quoted: message 
+           });
+      }
+});               
