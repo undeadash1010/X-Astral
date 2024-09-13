@@ -1,5 +1,5 @@
 const { commands, Meta } = require('../lib/');
-const { MessageType } = require('@whiskeysockets/baileys');
+const { MessageType } = require('@adiwajshing/baileys');
 const axios = require('axios');
 const config = require('../config')
 const fs = require('fs');
