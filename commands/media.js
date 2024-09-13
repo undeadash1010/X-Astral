@@ -101,41 +101,44 @@ Meta({
     }
 });
             
-            
-Meta({
-  command: 'sticker',
-  category: 'media',
-  handler: async (sock, message, args, languages) => {
-    const { from, message: msg } = message;
-    const media = msg.imageMessage || msg.videoMessage || msg.stickerMessage;
-    if (!media) {
-      return await sock.sendMessage(from, { 
-        text: languages[config.LANGUAGE].IMAGE_MSG}, { quoted: message });
-    } const buffer = await sock.downloadMediaMessage(media);
-    const packName = config.PACKNAME;
-    const cropp = await sharp(buffer)
-      .resize(512, 512, {
-        fit: sharp.fit.cover,
-        position: sharp.strategy.entropy
-      })
-      .webp({ quality: 70 })
-      .toBuffer();
+const { Sticker, StickerTypes } = require('wa-sticker-formatter');
 
-    const st_Data = {
-      mimetype: 'image/webp',
-      data: cropp,
-      ptt: false,
-      contextInfo: {
-        externalAdReply: {
-          title: '🤓 X-Astral',
-          body: packName,
-          sourceUrl: '',
-        }
-      }
-    };
-    await sock.sendMessage(from, { sticker: st_Data }, { quoted: message });
-  }
-});
+Meta({
+    command: 'sticker',
+    category: 'media',
+    handler: async (sock, args, message, languages) => {
+        const { from } = message;
+
+        if (!message.message || !(message.message.imageMessage || message.message.videoMessage || message.message.gifMessage)) {
+            return sock.sendMessage(from, { text: '*Please send an image, video, or GIF*' }, { quoted: message });
+        } const media = await sock.downloadMediaMessage(message); 
+        let Options = {
+            pack: 'My Pack',         
+            author: 'Sticker Bot',   
+            quality: 80,              
+            type: StickerTypes.FULL,  
+            categories: ['👀', '👌'],
+        }; if (message.message.imageMessage) {
+             Options.type = StickerTypes.FULL; 
+        } else if (message.message.videoMessage || message.message.gifMessage) {
+           Options.type = StickerTypes.FULL; 
+            Options.animated = true;         
+        }  const sticker = new Sticker(media, Options);
+        const ztr_skk = await sticker.toBuffer();
+        await sock.sendMessage(from, {
+            sticker: ztr_skk,
+            mimetype: 'image/webp',
+            contextInfo: {
+                externalAdReply: {
+                    title: 'Created',
+                    body: 'Done',
+                    mediaType: 2,
+                    sourceUrl: '', 
+                }
+            }
+        }, { quoted: message });
+    }
+});          
 
 let polls = {};
 Meta({
