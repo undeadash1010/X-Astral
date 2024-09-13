@@ -1,5 +1,5 @@
 const { commands, Meta } = require('../lib/');
-const { MessageType, WA_DEFAULT_EPHEMERAL } = require('@whiskeysockets/baileys');
+const { MessageType, WA_DEFAULT_EPHEMERAL } = require('@adiwajshing/baileys');
 const config = require('../config');
 Meta({
   command: 'kick',
