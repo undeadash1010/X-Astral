@@ -3,7 +3,6 @@
   "version": "3.0.0",
   "description": "_",
   "main": "Socket.js",
-  "type": "commonjs",
   "scripts": {
     "start": "node Socket.js",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -11,7 +10,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@adiwajshing/baileys": "git+https://github.com/Diegoson/WaBot.git",   
+    "@whiskeysockets/baileys": "git+https://github.com/Diegoson/WaBot.git",   
     "axios": "^1.7.2",
     "child_process": "^1.0.2",
     "canvafy": "^7.2.0",
