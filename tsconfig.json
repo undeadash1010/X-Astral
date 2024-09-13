@@ -1,8 +1,11 @@
 {
   "compilerOptions": {
+    "target": "ES6",
     "module": "commonjs",
-    "target": "es6",
+    "strict": true,
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true
-  }
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "exclude": ["node_modules"]
 }
