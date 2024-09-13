@@ -3,28 +3,21 @@ const { commands, Meta } = require('../lib/');
 const economy_store = {};
 const get_Points = (userId) => {
   return economy_store[userId] ? economy_store[userId].points : 0;
-};
-const get_Diamonds = (userId) => {
+}; const get_Diamonds = (userId) => {
   return economy_store[userId] ? economy_store[userId].diamonds : 0;
-};
-const get_Gold = (userId) => {
+}; const get_Gold = (userId) => {
   return economy_store[userId] ? economy_store[userId].gold : 0;
-};
-const update_eco = (userId, points = 0, diamonds = 0, gold = 0) => {
+}; const update_eco = (userId, points = 0, diamonds = 0, gold = 0) => {
   if (!economy_store[userId]) {
     economy_store[userId] = { points: 0, diamonds: 0, gold: 0 };
-  }
-  economy_store[userId].points += points;
+  } economy_store[userId].points += points;
   economy_store[userId].diamonds += diamonds;
   economy_store[userId].gold += gold;
-};
-const cent_xp = (userId, points) => {
+}; const cent_xp = (userId, points) => {
   return get_Points(userId) >= points;
-};
-const Get_XP = () => {
+}; const Get_XP = () => {
   return Math.floor(Math.random() * (500 - 50 + 1)) + 50;
-};
-const soccer_table = (slots) => {
+}; const soccer_table = (slots) => {
   return `
 -----------------------
 |  ${slots[0][0]}  |  ${slots[0][1]}  |  ${slots[0][2]}  |
