@@ -113,8 +113,8 @@ Meta({
             return sock.sendMessage(from, { text: '*Please send an image, video, or GIF*' }, { quoted: message });
         } const media = await sock.downloadMediaMessage(message); 
         let Options = {
-            pack: 'My Pack',         
-            author: 'Sticker Bot',   
+            pack: config.PACKNAME || 'Naxor_Ser❤️',         
+            author: config.AUTHOR_PACK || 'Astral_Bot❤️',   
             quality: 80,              
             type: StickerTypes.FULL,  
             categories: ['👀', '👌'],
