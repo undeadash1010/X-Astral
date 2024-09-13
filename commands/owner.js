@@ -5,6 +5,29 @@ const path = require('path');
 const { MessageType } = require('@adiwajshing/baileys');
 
 Meta({
+  command: 'setsudo',
+  category: 'owner',
+  usage: 'prefix/$number',
+  handler: async (sock, message, args, author, languages) => {
+    const { from } = message;
+    if (!author) {
+      await sock.sendMessage(from, { text: languages[config.LANGUAGE].OWNER_MSG });
+      return;
+    }  if (args.length !== 1) {
+      await sock.sendMessage(from, { text: '*_provide a valid_number_*' });
+      return;
+    } const sec_vum = args[0].replace('@s.whatsapp.net', '');
+    let mods = process.env.MODS ? JSON.parse(process.env.MODS) : [];
+    if (mods.includes(`${sec_vum}@s.whatsapp.net`)) {
+      await sock.sendMessage(from, { text: '*_already a mode_*' });
+      return;
+    }  mods.push(`${sec_vum}@s.whatsapp.net`);
+    process.env.MODS = JSON.stringify(mods);
+    await sock.sendMessage(from, { text: `${sec_vum} *done*` });
+  }
+});
+
+Meta({
   command: 'exe',
   category: 'owner',
   filename: __filename,
