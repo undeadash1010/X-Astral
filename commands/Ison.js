@@ -15,7 +15,7 @@ Meta({
         quoted: message
       });
     }
-    let res_matched = '*WhatsApp Num Ison:*\n\n';
+    let res_matched = '*WhatsApp Nums:*\n\n';
     const results = [];
     for (const number of numbers) {
       const id = number.includes('@s.whatsapp.net') ? number : `${number}@s.whatsapp.net`;
