@@ -1,4 +1,4 @@
-# WaveBot
+# X-Astral
 
 > [!NOTE]
 > wave bot made using whiskeysockets baileys
