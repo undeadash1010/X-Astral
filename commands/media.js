@@ -1,7 +1,7 @@
 const { commands, Meta } = require('../lib/');
 const config = require('../config.js');
 const { writeFileSync } = require('fs');
-const { MessageType, Mimetype } = require('@adiwajshing/baileys');
+const { MessageType, Mimetype } = require('@whiskeysockets/baileys');
 const ffmpeg = require('fluent-ffmpeg');
 const ffmpegPath = require('ffmpeg-static');
 ffmpeg.setFfmpegPath(ffmpegPath);
