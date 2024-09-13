@@ -140,6 +140,48 @@ Meta({
     }
 });          
 
+Meta({
+    command: 'steal',
+    category: 'media',
+    handler: async (sock, args, message, languages) => {
+        const { from, quotedMessage } = message;
+        if (!quotedMessage || !(quotedMessage.stickerMessage || quotedMessage.videoMessage || quotedMessage.gifMessage)) {
+            return sock.sendMessage(from, { text: '*_Please reply to a sticker, video, or GIF_*' }, { quoted: message });
+        } if (args.length === 0 || !args.includes('||')) {
+            return sock.sendMessage(from, { text: 'e.g/ steal <packName> || <authorName>' }, { quoted: message });
+        }   const [packName, authorName] = args.join(' ').split(' || ').map(arg => arg.trim());
+        if (!packName || !authorName) {
+            return sock.sendMessage(from, { text: 'provide_pack name and_author name' }, { quoted: message });
+        } const media = await sock.downloadMediaMessage(quotedMessage);
+        let stickerz = {
+            pack: packName,
+            author: authorName,
+            quality: 80,
+            type: StickerTypes.FULL, 
+            categories: ['🌟'], 
+        };
+        if (quotedMessage.stickerMessage) {
+            stickerz.type = StickerTypes.FULL;
+        } else if (quotedMessage.videoMessage || quotedMessage.gifMessage) {
+            stickerz.type = StickerTypes.FULL; 
+            stickerz.animated = true;          
+        }  const van = new Sticker(media, stickerz);
+        const diego = await van.toBuffer();
+        await sock.sendMessage(from, {
+            sticker: diego,
+            mimetype: 'image/webp',
+            contextInfo: {
+                externalAdReply: {
+                    title: 'Stolen',
+                    body: `${packName}|${authorName}`,
+                    mediaType: 2,
+                    sourceUrl: '', 
+                }
+            }
+        }, { quoted: message });
+    }
+});
+                    
 let polls = {};
 Meta({
   command: 'vote',
