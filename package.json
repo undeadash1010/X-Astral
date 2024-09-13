@@ -7,8 +7,9 @@
     "start": "node Socket.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "MIT",
+   "engines": {
+        "node": ">=18.0.0 <=21.x"
+    },
   "dependencies": {
     "@whiskeysockets/baileys": "git+https://github.com/Diegoson/WaBot.git",   
     "axios": "^1.7.2",
