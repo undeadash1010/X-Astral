@@ -60,32 +60,27 @@ Meta({
   command: 'remove_common',
   category: 'group',
   handler: async (sock, message, isGroup, args) => {
-    const { key, from  } = message;
-    const { remoteJid } = key;
+    const { from  } = message;
 
   if (!isGroup) {
-      return await sock.sendMessage(remoteJid, { text: '*[ERROR]* _Group_Command_' }, { quoted: message });
-    }
-    const groupMetadata = await sock.groupMetadata(from);
+      return await sock.sendMessage(from, { text: '*[ERROR]* _Group_Command_' }, { quoted: message });
+    } const groupMetadata = await sock.groupMetadata(from);
     const participants = groupMetadata.participants;
-    const Num_Jid = {};
+    const sonic = {};
     for (const participant of participants) {
       const number = participant.id.split('@')[0];
-      if (Num_Jid[number]) {
-        Num_Jid[number]++;
+      if (sonic[number]) {
+        sonic[number]++;
       } else {
-        Num_Jid[number] = 1;
-      }
-    }
-
-    const common_num = Object.keys(Num_Jid).filter(number => Num_Jid[number] > 1);
+        sonic[number] = 1;
+      } } const common_num = Object.keys(sonic).filter(number => sonic[number] > 1);
     if (common_num.length === 0) {
-      return await sock.sendMessage(remoteJid, { text: 'No common numbers found in the group' }, { quoted: message });
+      return await sock.sendMessage(from, { text: 'No common numbers found in the group' }, { quoted: message });
     } let naxor_ser = '*Common_Detected:*\n\n';
     common_num.forEach(number => {
       naxor_ser += `- ${number}\n`;
     }); naxor_ser += '\n*Removing_these numbers...*';
-    await sock.sendMessage(remoteJid, { text: naxor_ser }, { quoted: message });
+    await sock.sendMessage(from, { text: naxor_ser }, { quoted: message });
     for (const number of common_num) {
       const part_psnts = participants.filter(p => p.id.startsWith(`${number}@`));
       for (const participant of part_psnts) {
