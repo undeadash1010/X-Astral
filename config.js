@@ -6,6 +6,8 @@ module.exports = {
     DEEPAI_KEY: '7f831cb9-aa30-4270-bfa6-0a5d4d03afac',
    //MONGODB_URL: process.env.MONGODB_URL || 'mongodb+srv://z:z@cluster0.sy21r5d.mongodb.net/?retryWrites=true&w=majority',
     PREFIX: process.env.PREFIX || '!',
+    PACKNAME: process.env.PACKNAME ||'Astrial❤️',
+    AUTHOR_PACK: process.env.AUTHOR_PACK|| 'Naxor❤️',
     antilink: {},
     SESSION_ID: process.env.SESSION_ID || 'session_key',
     BRAINSHOP_PRIVATE: process.env.BRAINSHOP_PRIVATE || 'false', //true
