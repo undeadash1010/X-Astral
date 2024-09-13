@@ -5,11 +5,13 @@
   "main": "Socket.js",
   "scripts": {
     "start": "node Socket.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "echo 'Skipping prepare step'",
+    "postinstall": "rm -rf node_modules/@whiskeysockets/baileys/tsconfig.json"
   },
-   "engines": {
-        "node": ">=18.0.0 <=21.x"
-    },
+  "engines": {
+    "node": ">=18.0.0 <=21.x"
+  },
   "dependencies": {
     "@whiskeysockets/baileys": "git+https://github.com/Diegoson/WaBot.git",   
     "axios": "^1.7.2",
@@ -33,7 +35,5 @@
     "quickmongo": "^5.2.0",
     "wa-sticker-formatter": "^4.3.2",
     "mongodb": "^6.8.0"
-    
   }
 }
-
