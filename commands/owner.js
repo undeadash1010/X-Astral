@@ -2,7 +2,7 @@ const { commands, Meta } = require('../lib');
 const fs = require('fs');
 const config = require('../config');
 const path = require('path');
-const { MessageType } = require('@adiwajshing/baileys');
+const { MessageType } = require('@whiskeysockets/baileys');
 
 Meta({
   command: 'setsudo',
