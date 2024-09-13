@@ -1,6 +1,6 @@
 const { commands, Meta } = require('../lib/');
 const config = require('../config.js');
-const { jidDecode } = require('@adiwajshing/baileys');
+const { jidDecode } = require('@whiskeysockets/baileys');
 
 Meta({
   command: 'ison',
