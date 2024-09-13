@@ -1,4 +1,5 @@
 const axios = require('axios');
+const config = require('../config');
 const { Meta } = require('../lib/');
 
 Meta({
@@ -14,7 +15,7 @@ Meta({
 
 Meta({
     command: 'translate',
-    category: 'utilities',
+    category: 'mics',
     handler: async (sock, message, args) => {
         const { from } = message;
         const [targetLang, ...text] = args;
@@ -25,4 +26,18 @@ Meta({
         const naxors = res_stz.data.responseData.translatedText;
         await sock.sendMessage(from, { text: naxors });
     }
+});
+
+Meta({
+  command: 'mods',
+  category: 'mics',
+  usage: 'prefix$mods',
+  handler: async (sock, message, args) => {
+    const { from } = message;
+    const mods = process.env.MODS ? JSON.parse(process.env.MODS) : [];
+    const mod_str = mods.length > 0
+      ? mods.map(mod => `🛡️ ${mod}`).join('\n')
+      : 'no_mods';
+    await sock.sendMessage(from, { text: `*MODES_SUDOS:*\n\n${mod_str}`, mentions: mods });
+  }
 });
