@@ -4,6 +4,7 @@ module.exports = {
     VERSION: require('./package.json').version,
     OWNER: process.env.OWNER ||'Its You😂',
     DEEPAI_KEY: '7f831cb9-aa30-4270-bfa6-0a5d4d03afac',
+    DL_API: 'https://x-astrial-apis.onrender.com/',
    //MONGODB_URL: process.env.MONGODB_URL || 'mongodb+srv://z:z@cluster0.sy21r5d.mongodb.net/?retryWrites=true&w=majority',
     PREFIX: process.env.PREFIX || '!',
     PACKNAME: process.env.PACKNAME ||'Astrial❤️',
