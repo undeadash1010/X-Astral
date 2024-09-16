@@ -14,7 +14,7 @@ Meta({
     if (!query) {
       return sock.sendMessage(from, { text: '*_Please provide a search query_*' });
     } try {
-      const res = await axios.get(`${API_URL}/api/search/yts?query=${query}`);
+      const res = await axios.get(`${DL_API}/api/search/yts?query=${query}`);
       const { videos } = res.data;
       if (videos.length === 0) {
         return sock.sendMessage(from, { text: 'no_gay' });
