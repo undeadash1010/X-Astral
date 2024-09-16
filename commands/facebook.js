@@ -11,8 +11,7 @@ Meta({
         const dl_fb = args[0];
         if (!dl_fb) {
             return sock.sendMessage(from, { text: '_Provide a valid fb url_' });
-        } try {
-            const res = await axios.get(`${DL_API}/api/download/fb_dl?url=${dl_fb}`);
+        } try { const res = await axios.get(`${DL_API}/api/download/fb_dl?url=${dl_fb}`);
             const { owner_name, results } = res.data;
             if (!results || results.length === 0) {
                 return sock.sendMessage(from, { text: 'No gay_' });
@@ -24,7 +23,7 @@ Meta({
             });
             return sock.sendMessage(from, {
                 video: Qualit.url,
-                caption: `*Owner:* ${owner_name}\n*Download:* ${Qualit.dl_title}`
+                caption: `*⍗Owner:* ${owner_name}\n*⍗Download:* ${Qualit.dl_title}`
             });
         } catch (error) {
             console.error(error);
