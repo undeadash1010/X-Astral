@@ -29,7 +29,7 @@ async function Connect_Session() {
 
 async function startBot() {
     await Connect_Session();
-    const { state, saveCreds } = await useMultiFileAuthState(SESSION_FILE);
+    const { state, saveCreds } = await useMultiFileAuthState(path.join(__dirname, SESSION_FILE));
     const storez = { contacts: {} };
     const sock = makeWASocket({
         logger: P({ level: 'silent' }),
