@@ -69,9 +69,9 @@ async function startBot() {
         }
     });
     
-    sock.ev.on('messages.upsert', async (msg) => {
+    sock.ev.on('messages.upsert', async (m) => {
     const chalk = (await import('chalk')).default;
-    if (msg.type !== 'notify') return;
+    if (m.type !== 'notify') return;
     const msg = await serialised(JSON.parse(JSON.stringify(msg.messages[0])), msg, sock);
     if (!msg.message) return;
     const sendd = msg.sender;
@@ -82,9 +82,9 @@ async function startBot() {
         'imageMessage': () => msg.text,
         'videoMessage': () => msg.text,
         'extendedTextMessage': () => msg.text,
-        'buttonsResponseMessage': () => msg.message.buttonsResponseMessage.selectedButtonId,
-        'listResponseMessage': () => msg.message.listResponseMessage.singleSelectReply.selectedRowId,
-        'templateButtonReplyMessage': () => msg.message.templateButtonReplyMessage.selectedId
+        'buttonsResponseMessage': () => m.message.buttonsResponseMessage.selectedButtonId,
+        'listResponseMessage': () => m.message.listResponseMessage.singleSelectReply.selectedRowId,
+        'templateButtonReplyMessage': () => m.message.templateButtonReplyMessage.selectedId
     };
     const msgType = msg.messageType;
     const body = messageMapping[msgType]?.() || '';
