@@ -23,7 +23,7 @@ async function Connect_Session() {
     let sessionData = sessionId;
     if (sessionId.length < 30) {
         const { data } = await axios.get(`https://pastebin.com/raw/${sessionId}`);
-        session = Buffer.from(data, 'base64').toString('utf8');
+        sessionId = Buffer.from(data, 'base64').toString('utf8');
     }fs.writeFileSync(SESSION_FILE, session, 'utf8');
 }
 
