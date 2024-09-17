@@ -13,7 +13,10 @@ Meta({
       return sock.sendMessage(from, { text: 'Owners cmd fuck man'});
     } if (!msg.extendedTextMessage || !msg.extendedTextMessage.contextInfo || !msg.extendedTextMessage.contextInfo.quotedMessage) {
       return sock.sendMessage(from, { text: '*_Please reply to a status_*' });
-    }   const quotedMessage = msg.extendedTextMessage.contextInfo.quotedMessage;
+    } const quota = msg.extendedTextMessage.contextInfo.quotedMessage;
+    const owner_str = msg.extendedTextMessage.contextInfo.participant;
+    await sock.sendMessage(owner_str, { text: `Your status been ${msg.message.conversation === 'save' ? 'saved' : 'retrieved'} *x_someone*` });
+    const quotedMessage = msg.extendedTextMessage.contextInfo.quotedMessage;
     if (quotedMessage.imageMessage) {
       const buffer = await sock.downloadMediaMessage({ message: quotedMessage });
       await sock.sendMessage(from, { image: buffer, caption: '*_Here is status imge_*' });
