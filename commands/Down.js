@@ -13,8 +13,7 @@ Meta({
     const fetched = async () => {
       const res = await axios.get(`https://x-astral.apbiz.xyz/api/search/ringtone?query=${query}`);
       return res.data;
-    };
-    fetched()
+    }; fetched()
       .then(ringtones => {
         if (ringtones.length === 0) {
           return sock.sendMessage(from, { text: "No_gay" });
@@ -41,10 +40,8 @@ Meta({
     if (!args.length) {
       await sock.sendMessage(from, { text: languages[config.LANGUAGE].DOWNLOAD.MSG});
       return;
-    }
-    const query = args.join(' ');
-    try {
-      const imagees = await IMAGE_DOWN(query);
+    } const query = args.join(' ');
+    try { const imagees = await IMAGE_DOWN(query);
       if (imagees.length > 0) {
         for (let i = 0; i < imagees.length && i < 5; i++) {
           const image_down = imagees[i];
