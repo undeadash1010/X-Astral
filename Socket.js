@@ -38,7 +38,7 @@ async function startBot() {
         auth: state,
         getMessage: async () => {
             return {
-                conversation: 'owner is diego call me naxor'
+                conversation: '⍗ owner is diego call me naxor'
             }
         }
     });
@@ -54,11 +54,11 @@ async function startBot() {
                     const group_name = (await sock.groupMetadata(remoteJid)).subject;
                     const gender = store.contacts[participant]?.name || participant.split('@')[0];
                     if (Content_pdate) {
-                        const anti_del = `🔴 *Anti-Delete Alert* 🔴\n\n` +
-                            `👤 *Sender*: @${gender}\n` +
-                            `⌚ *Time*: ${new Date().toLocaleString()}\n` +
-                            `📜 *Message*: ${Content_pdate}\n` +
-                            `🚨 *Note*: Deleted`;
+                        const anti_del = `⍗ *Anti-Delete Alert* ⍗\n\n` +
+                            `⍗ *Sender*: @${gender}\n` +
+                            `⍗ *Time*: ${new Date().toLocaleString()}\n` +
+                            `⍗ *Message*: ${Content_pdate}\n` +
+                            `⍗ *Note*: Deleted`;
                         await sock.sendMessage(remoteJid, {
                             text: anti_del,
                             mentions: [participant]
@@ -118,7 +118,6 @@ async function startBot() {
               }
           }
        }, { quoted: msg });
-
        }  if (config.antilink) {
                 const cd_code = body.match(/https:\/\/chat\.whatsapp\.com\/[a-zA-Z0-9]{10,}/g);
                 if (cd_code && !msg.key.fromMe) {
@@ -130,11 +129,10 @@ async function startBot() {
                     if (!groupAdmins.includes(msg.sender)) { 
                         if (cd_code[0] !== gc_code) {
                             const Mzg_code = `*<===Alert===>*\n\n` +
-                                `@${msg.sender.split('@')[0]}: not_allowed\n\n` +
-                                `🔗 *Link*: ${cd_code[0]}\n\n` +
-                                `⚠️ *Note*: unauthorized links will lead to removal\n` +
-                                `Adhere to gc_rules.`;                                   
-
+                                `⍗ @${msg.sender.split('@')[0]}: not_allowed\n\n` +
+                                `⍗ *Link*: ${cd_code[0]}\n\n` +
+                                `⍗ *Note*: unauthorized links\n` +
+                                `⍗  Adhere to gc_rules.`;                                   
                             await sock.sendMessage(from, { text: Mzg_code, mentions: [msg.sender] });
                             await sock.groupParticipantsUpdate(from, [msg.sender], 'remove');
                         }
@@ -150,8 +148,7 @@ async function startBot() {
             if (!isBotAdmin && !mode_locked) return;
         } if (config.MODE === 'public' && command.fromMe && !isBotAdmin) {
             return;
-        }
-        const mention_cn = msg.message.extendedTextMessage?.contextInfo?.mentionedJid?.includes(sock.user.id);
+        } const mention_cn = msg.message.extendedTextMessage?.contextInfo?.mentionedJid?.includes(sock.user.id);
         const rep = msg.message.extendedTextMessage?.contextInfo?.stanzaId && msg.message.extendedTextMessage.contextInfo.participant === sock.user.id;
         if (mention_cn || rep) {
             if (brainshop_private && !config.MODS.includes(msg.sender)) {
@@ -161,8 +158,7 @@ async function startBot() {
                 const res_cn = await axios.get(`http://api.brainshop.ai/get?bid=172352&key=vTmMboAxoXfsKEQQ&uid=${uid}&msg=${query}`);
                   const reply = res_cn.data.cnt;
             await sock.sendMessage(from, { text: reply }, { quoted: msg });
-            }
-            if (body.startsWith(`${config.PREFIX}eval`) || body.startsWith(`${config.PREFIX}$`) ||
+            }  if (body.startsWith(`${config.PREFIX}eval`) || body.startsWith(`${config.PREFIX}$`) ||
                 body.startsWith(`${config.PREFIX}>`) || body.startsWith(`${config.PREFIX}#`)) {
                 const command_Type = body.charAt(config.PREFIX.length); 
                 const code_Eval = body.slice(config.PREFIX.length + 2).trim();
@@ -170,12 +166,10 @@ async function startBot() {
                     await sock.sendMessage(from, { text: 'Provide_code to evaluate Example: !eval 2 + 2' });
                     return;
                 } if (msg.sender === sock.user.id || config.MODS.includes(msg.sender)) {
-                    try {
-                        const timeout = 5000;
+                    try { const timeout = 5000;
                         let result;
                          const compile_cd = new Promise((resolve, reject) => {
-                            try {
-                                result = eval(code_Eval);
+                            try { result = eval(code_Eval);
                                 resolve(result);
                             } catch (error) {
                                 reject(error);
@@ -184,8 +178,7 @@ async function startBot() {
                         result = await Promise.race([
                             compile_cd,
                             new Promise((_, reject) => setTimeout(() => reject(new Error('Timed out')), timeout))
-                        ]);
-                        const output = typeof result === 'string' ? result : require('util').inspect(result);
+                        ]); const output = typeof result === 'string' ? result : require('util').inspect(result);
                         const trimmed = output.length > 2000 ? `${output.slice(0, 2000)}...` : output;
                         await sock.sendMessage(from, { text: `*OUTPUT*:\n${trimmed}` });
                     } catch (error) {
@@ -206,8 +199,7 @@ async function startBot() {
          const command = commands.find(cmd => cmd.command === cmd_str);
          if (command) {
             const args = body.slice(config.PREFIX.length + cmd_str.length).trim().split(' ');
-            try {
-                await command.handler({sock, msg, args, isGroup, author, creator, groupMetadata, mentionedJid, mentionedJidList, groupAdmins, languages, reacts,
+            try {  await command.handler({sock, msg, args, isGroup, author, creator, groupMetadata, mentionedJid, mentionedJidList, groupAdmins, languages, reacts,
                     command: cmd_str,
                 });
             } catch (error) {}
@@ -223,8 +215,7 @@ const new_level = get_Level(new_XP);
 const before = get_Level(user_XP);
 if (new_level > before) {
     let profile_pic;
-    try {
-        const get_image = await sock.profilePictureUrl(wats_user, 'image');
+    try { const get_image = await sock.profilePictureUrl(wats_user, 'image');
         const response = await fetch(get_image);
         profile_pic = await response.buffer();
     } catch (error) {
@@ -234,8 +225,7 @@ if (new_level > before) {
         const fallback_img = 'https://www.freepik.com/premium-vector/people-icon-person-symbol-vector-illustration_34470101.htm#query=blank%20profile&position=9&from_view=keyword&track=ais_hybrid&uuid=679974d4-3b6a-42c2-b807-b313d389fd87';
         const response = await fetch(fallback_img);
         profile_pic = await response.buffer();
-    } try {
-        const level_card = await canvafy.createImage(600, 250)  
+    } try {  const level_card = await canvafy.createImage(600, 250)  
             .setBackgroundColor('#1A1A1A')  
             .drawCircleImage(profile_pic, { x: 100, y: 125, radius: 75 })  
             .setText(`Level ${new_level}`, {
@@ -247,9 +237,8 @@ if (new_level > before) {
                 align: 'left', stroke: 'black', strokeWidth: 2
             })  
             .toBuffer();
-
         const message_cap = 
-            `🌟 *Level Up* 🌟\n` +
+            `⍗ *Leveld Up* ⍗\n` +
             `╭─────\n` +
             `│ *Congrats*: @${wats_user.split('@')[0]}\n` +
             `│ *Youve reached level*: ${new_level}\n` +
@@ -269,8 +258,7 @@ if (new_level > before) {
                 if (!isGroup) {
                     await sock.sendMessage(from, { text: 'This command can only be used in groups' });
                     return;
-                }
-                const isAdmin = groupMetadata.participants.some(participant => participant.id === msg.sender && participant.admin !== null);
+                } const isAdmin = groupMetadata.participants.some(participant => participant.id === msg.sender && participant.admin !== null);
                 const isBotAdmin = msg.sender === sock.user.id;
                 const mode_locked = config.MODS.includes(msg.sender);
                 if (!isBotAdmin && !mode_locked && !isAdmin) {
@@ -283,8 +271,7 @@ if (new_level > before) {
                     return;
                 } const announcement_dt = 'announcement';
                 const mute_ms = mute_dt * 60000;
-                try {
-                    await sock.groupUpdate(from, { 
+                try { await sock.groupUpdate(from, { 
                         announcement: announcement_dt,
                         mute: mute_ms
                     });
@@ -295,15 +282,13 @@ if (new_level > before) {
                 if (!isGroup) {
                     await sock.sendMessage(from, { text: 'This command can only be used in groups' });
                     return;
-                }
-                const isAdmin = groupMetadata.participants.some(participant => participant.id === msg.sender && participant.admin !== null);
+                }  const isAdmin = groupMetadata.participants.some(participant => participant.id === msg.sender && participant.admin !== null);
                 const isBotAdmin = msg.sender === sock.user.id;
                 const mode_locked = config.MODS.includes(msg.sender);
                 if (!isBotAdmin && !mode_locked && !isAdmin) {
                     await sock.sendMessage(from, { text: '*_You need to be an admin to use this command_*' });
                     return;
-                } try {
-                    await sock.groupUpdate(from, { 
+                } try { await sock.groupUpdate(from, { 
                         announcement: 'not_announcement',
                         mute: 0 
                     });
@@ -311,11 +296,9 @@ if (new_level > before) {
                 } catch (error) {
                 }
             }
-    
-    
-
-   sock.ev.on('group-participants.update', async (event) => {
- const { id, participants, action } = event;
+     
+sock.ev.on('group-participants.update', async (event) => {
+const { id, participants, action } = event;
 const groupMetadata = await sock.groupMetadata(id);
 const groupName = groupMetadata.subject;
 const time = new Date().toLocaleString();
@@ -323,8 +306,7 @@ for (let participant of participants) {
     const name = participant.split('@')[0];
     let message;
     let naxorz; let profile_pik;
-    try {
-        const gets_image = await sock.profilePictureUrl(participant, 'image');
+    try { const gets_image = await sock.profilePictureUrl(participant, 'image');
         const response = await fetch(gets_image);
         profile_pik = await response.buffer();
     } catch (error) {
@@ -332,8 +314,7 @@ for (let participant of participants) {
         const fallback_str = 'https://www.freepik.com/premium-vector/people-icon-person-symbol-vector-illustration_34470101.htm#query=blank%20profile&position=9&from_view=keyword&track=ais_hybrid&uuid=679974d4-3b6a-42c2-b807-b313d389fd87';
         const response = await fetch(fallback_str);
         profile_pik = await response.buffer();
-    }
-    if (action === 'add') {
+    } if (action === 'add') {
         naxorz = await canvafy.createImage(600, 300)
             .setBackgroundColor('#1A1A1A')
             .drawCircleImage(profile_pik, { x: 100, y: 150, radius: 75 })
@@ -355,10 +336,10 @@ for (let participant of participants) {
             })
             .toBuffer();
         message = `┌────\n` +
-            `│ 👋 *Welcome* @${name}\n` +
-            `│ 🏡 *Group*: ${groupName}\n` +
-            `│ 🕒 *Time*: ${time}\n` +
-            `│ 🤗 *We are excited X3*\n` +
+            `│ ⍗ *Welcome* @${name}\n` +
+            `│ ⍗ *Group*: ${groupName}\n` +
+            `│ ⍗ *Time*: ${time}\n` +
+            `│ ⍗ *We are excited X3*\n` +
             `└─────────────┘`;
         console.log(chalk.rgb(0, 255, 0)(`[${time}] ${groupName}: @${name}`));
     } else if (action === 'remove') {
@@ -383,13 +364,12 @@ for (let participant of participants) {
             })
             .toBuffer();
         message = `┌────\n` +
-            `│ 😔 *Goodbye*, @${name}\n` +
-            `│ 🏡 *Group*: ${groupName}\n` +
-            `│ 🕒 *Time*: ${time}\n` +
-            `│ 💔 *Will be missed*\n` +
+            `│ ⍗ *Goodbye*, @${name}\n` +
+            `│ ⍗ *Group*: ${groupName}\n` +
+            `│ ⍗ *Time*: ${time}\n` +
+            `│ ⍗ *Will be missed*\n` +
             `└─────────────┘`;
-    }
-    await sock.sendMessage(id, {
+    }  await sock.sendMessage(id, {
         image: naxorz,
         caption: message,
         mentions: [participant]
@@ -398,7 +378,6 @@ for (let participant of participants) {
     sock.ev.on('contacts.update', async (update) => {
         for (let contact of update) {
             let id = decodeJid(contact.id);
-
             if (storez && storez.contacts) {
                 storez.contacts[id] = {
                     id,
@@ -410,7 +389,6 @@ for (let participant of participants) {
 
     sock.ev.on('connection.update', (update) => {
         const { connection, lastDisconnect } = update;
-
         if (connection === 'close') {
             if (lastDisconnect.error?.output?.statusCode === DisconnectReason.loggedOut) {
                 console.log(chalk.red('Connection closed => Logged out'));
@@ -419,7 +397,7 @@ for (let participant of participants) {
                 startBot();
             }
         } else if (connection === 'open') {     
-        console.log("⬇️ Installing Plugins...");
+        console.log("⍗ Installing Plugins...");
         fs.readdirSync(`${__dirname}/commmands`)
            .filter(file => file.endsWith('.js'))
            .forEach(file => require(`${__dirname}/commands/${file}`));
@@ -431,12 +409,11 @@ for (let participant of participants) {
 sock.ev.on('call', async (update) => {
     const { id, from, isVideo, isGroupCall } = update;
     if (isGroupCall) return;
-    try {
-        await sock.updateBlockStatus(from, 'block');
+    try { await sock.updateBlockStatus(from, 'block');
     } catch (error) {
     }
-});
+      });
 
-});       
+   });       
 };
 startBot().catch(console.error);
