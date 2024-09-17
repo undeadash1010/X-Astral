@@ -217,7 +217,7 @@ async function startBot() {
        }
           }
       });
-const wats_user = author;
+const wats_user = msg.sender;
 const user_XP = get_XP(wats_user);
 const new_XP = user_XP + 10; 
 set_XP(wats_user, new_XP);
