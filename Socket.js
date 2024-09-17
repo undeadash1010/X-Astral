@@ -3,7 +3,7 @@ const { default: makeWASocket,
        DisconnectReason,
        Browsers } = require('@whiskeysockets/baileys');
 const P = require('pino');
-const chalk = require('chalk');
+const chalk = (await import('chalk')).default;
 const fs = require('fs');
 const axios = require('axios');
 const canvafy = require('canvafy');
