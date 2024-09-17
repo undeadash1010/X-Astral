@@ -29,6 +29,7 @@ async function Connect_Session() {
 async function startBot() {
     await Connect_Session();
     const { state, saveCreds } = await useMultiFileAuthState(SESSION_FILE);
+    const storez = { contacts: {} };
     const sock = makeWASocket({
         logger: P({ level: 'silent' }),
         printQRInTerminal: false,
@@ -42,7 +43,6 @@ async function startBot() {
     });
     store.bind(sock.ev);
     sock.ev.on('creds.update', saveCreds);
-    const store = { contacts: {} };
     sock.ev.on('messages.update', async (update) => {
         for (let msg_pdate of update) {
             if (msg_pdate.key && msg_pdate.updateType === 'message-revoke') {
@@ -398,8 +398,8 @@ for (let participant of participants) {
         for (let contact of update) {
             let id = decodeJid(contact.id);
 
-            if (store && store.contacts) {
-                store.contacts[id] = {
+            if (storez && storez.contacts) {
+                storez.contacts[id] = {
                     id,
                     name: contact.notify || 'No Name',
                 };
