@@ -24,7 +24,7 @@ async function Connect_Session() {
     if (sessionId.length < 30) {
         const { data } = await axios.get(`https://pastebin.com/raw/${sessionId}`);
         sessionId = Buffer.from(data, 'base64').toString('utf8');
-    }fs.writeFileSync(SESSION_FILE, session, 'utf8');
+    }fs.writeFileSync(SESSION_FILE, sessionId, 'utf8');
 }
 
 async function startBot() {
