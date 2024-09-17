@@ -5,6 +5,30 @@ const path = require('path');
 const { MessageType } = require('@whiskeysockets/baileys');
 
 Meta({
+  command: ['save', 'get'],
+  category: 'owner',
+  handler: async (sock, message, args, author) => {
+    const { from, message: msg } = message;
+    if(! author) {
+      return sock.sendMessage(from, { text: 'Owners cmd fuck man'});
+    } if (!msg.extendedTextMessage || !msg.extendedTextMessage.contextInfo || !msg.extendedTextMessage.contextInfo.quotedMessage) {
+      return sock.sendMessage(from, { text: '*_Please reply to a status_*' });
+    }   const quotedMessage = msg.extendedTextMessage.contextInfo.quotedMessage;
+    if (quotedMessage.imageMessage) {
+      const buffer = await sock.downloadMediaMessage({ message: quotedMessage });
+      await sock.sendMessage(from, { image: buffer, caption: '*_Here is status imge_*' });
+    } else if (quotedMessage.videoMessage) {
+      const buffer = await sock.downloadMediaMessage({ message: quotedMessage }); 
+      await sock.sendMessage(from, { video: buffer, caption: '*_Here is status vid_*' });
+    } else if (quotedMessage.conversation) {
+      const texti = quotedMessage.conversation;
+      await sock.sendMessage(from, { text: `${texti}` });
+    } else {
+      }
+  }
+});
+        
+Meta({
   command: 'setsudo',
   category: 'owner',
   usage: 'prefix/$number',
