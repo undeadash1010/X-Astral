@@ -13,7 +13,7 @@ const { languages } = require('./data_store/languages.js');
 const { commands } = require('./lib/commands');
 const { serialised, decodeJid } = require('./lib/serialize');
 const { get_XP, set_XP, get_Level } = require('./lib/leveling_xp');
-const store = makeInMemoryStore({ logger: pino().child({ level: "silent", stream: "store",}),});
+const store = makeInMemoryStore({ logger: P().child({ level: "silent", stream: "store",}),});
 const SESSION_FILE = path.join(__dirname, 'auth_info_baileys', 'creds.json');
 let brainshop_private = config.BRAINSHOP_PRIVATE || false;
 
