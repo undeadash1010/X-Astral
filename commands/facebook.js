@@ -20,8 +20,7 @@ Meta({
                 return sock.sendMessage(from, { text: 'No_gay' });
             } const Qualit = video.downloads.reduce((prev, current) => {
                 return (prev.quality.includes('HD') && !current.quality.includes('HD')) ? prev : current;
-            });
-            return sock.sendMessage(from, {
+            }); return sock.sendMessage(from, {
                 video: Qualit.url,
                 caption: `*⍗Owner:* ${owner_name}\n*⍗Download:* ${Qualit.dl_title}`
             });
