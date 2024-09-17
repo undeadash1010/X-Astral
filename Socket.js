@@ -118,7 +118,17 @@ async function startBot() {
               }
           }
        }, { quoted: msg });
-       }  if (config.antilink) {
+       }  
+         const reply = (text) => {
+    sock.sendMessage(
+        msg.key.remoteJid,  
+        {
+            text,  
+            contextInfo: { externalAdReply: { title: "Click", body: "x-astral", mediaType: 1,  
+        thumbnail: " ", mediaUrl: " ", sourceUrl: " ",  
+                }}}
+       );
+     }; if (config.antilink) {
                 const cd_code = body.match(/https:\/\/chat\.whatsapp\.com\/[a-zA-Z0-9]{10,}/g);
                 if (cd_code && !msg.key.fromMe) {
                     const group_code = groupMetadata.inviteCode;
@@ -199,7 +209,7 @@ async function startBot() {
          const command = commands.find(cmd => cmd.command === cmd_str);
          if (command) {
             const args = body.slice(config.PREFIX.length + cmd_str.length).trim().split(' ');
-            try {  await command.handler({sock, msg, args, isGroup, author, creator, groupMetadata, mentionedJid, mentionedJidList, groupAdmins, languages, reacts,
+            try {  await command.handler({sock, msg, args, reply, isGroup, author, creator, groupMetadata, mentionedJid, mentionedJidList, groupAdmins, languages, reacts,
                     command: cmd_str,
                 });
             } catch (error) {}
