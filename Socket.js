@@ -87,9 +87,12 @@ async function startBot() {
         'listResponseMessage': () => m.message.listResponseMessage.singleSelectReply.selectedRowId,
         'templateButtonReplyMessage': () => m.message.templateButtonReplyMessage.selectedId
     };
-    const msgType = msg.messageType;
-    const body = messageMapping[msgType]?.() || '';
-    const creator = config.MODS;
+const msgType = msg.messageType;
+let body = '';
+if (messageMapping[msgType]) {
+  body = messageMapping[msgType]();
+           }          
+           const creator = config.MODS;
      const from = msg.key.remoteJid;
       const isGroup = from.endsWith('@g.us');
       if (isGroup) {
