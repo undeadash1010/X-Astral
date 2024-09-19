@@ -15,7 +15,6 @@
     "chalk": "latest",
     "pino": "latest",
     "child_process": "^1.0.2",
-    "canvas": "^2.11.2",
     "os": "latest",
     "@google-cloud/speech": "^6.7.0",
     "fluent-ffmpeg": "^2.1.3",
