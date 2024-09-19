@@ -6,7 +6,6 @@ const { default: makeWASocket,
 const P = require('pino');
 const fs = require('fs');
 const axios = require('axios');
-const canvas = require('canvas');
 const path = require('path');
 const config = require('./config');
 const { languages } = require('./data_store/languages.js');
