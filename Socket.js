@@ -72,7 +72,7 @@ async function startBot() {
     const chalk = (await import('chalk')).default;
     const fetch = (await import('node-fetch')).default;
     if (m.type !== 'notify') return;
-    const msg = await serialised(JSON.parse(JSON.stringify(msg.messages[0])), msg, sock);
+    const msg = await serialised(JSON.parse(JSON.stringify(m.messages[0])), m, sock);
     if (!msg.message) return;
     const sendd = msg.sender;
     const contact = store.contacts[sendd] || {};
