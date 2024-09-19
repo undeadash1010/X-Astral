@@ -6,7 +6,7 @@ const { default: makeWASocket,
 const P = require('pino');
 const fs = require('fs');
 const axios = require('axios');
-const canvafy = require('canvafy');
+const canvas = require('canvas');
 const path = require('path');
 const config = require('./config');
 const { languages } = require('./data_store/languages.js');
@@ -382,4 +382,5 @@ sock.ev.on('group-participants.update', async (event) => {
             console.log(chalk.magenta('_Connected_'));
         }
     });
+               }
 startBot().catch(console.error);
