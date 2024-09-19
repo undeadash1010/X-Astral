@@ -306,53 +306,41 @@ sock.ev.on('group-participants.update', async (event) => {
     for (let participant of participants) {
         const name = participant.split('@')[0];
         let message;
-        let naxorz;
         let profile_pik;
         try { const gets_image = await sock.profilePictureUrl(participant, 'image');
             const response = await fetch(gets_image);
-            profile_pik = await jimp.read(await response.buffer());
+            const buffer = await response.buffer();
+            profile_pik = await jimp.read(buffer);
         } catch (error) {
             console.error(error);
             profile_pik = await jimp.read('https://www.freepik.com/premium-vector/people-icon-person-symbol-vector-illustration_34470101.htm#query=blank%20profile&position=9&from_view=keyword&track=ais_hybrid&uuid=679974d4-3b6a-42c2-b807-b313d389fd87');
         }   profile_pik.resize(150, 150).circle();
-        const canvas = await jimp.create(600, 300, '#1A1A1A');
-        canvas.composite(profile_pik, 50, 75);
-        const font = await jimp.loadFont(jimp.FONT_SANS_32_WHITE);
-        const fontSmall = await jimp.loadFont(jimp.FONT_SANS_16_WHITE);
+        const profileBuffer = await profile_pik.getBufferAsync(jimp.MIME_PNG);
         if (action === 'add') {
-            canvas.print(font, 250, 50, 'Welcome!');
-            canvas.print(font, 250, 150, `@${name}`);
-            canvas.print(fontSmall, 250, 200, `Group: ${groupName}`);
-            canvas.print(fontSmall, 250, 250, `Time: ${time}`);
-            naxorz = await canvas.getBufferAsync(jimp.MIME_PNG);
             message = `┌────\n` +
                 `│ ⍗ *Welcome* @${name}\n` +
                 `│ ⍗ *Group*: ${groupName}\n` +
                 `│ ⍗ *Time*: ${time}\n` +
                 `│ ⍗ *We are excited X3*\n` +
                 `└─────────────┘`;
-            console.log(chalk.rgb(0, 255, 0)(`[${time}] ${groupName}: @${name}`));
+            console.log(chalk.rgb(0, 255, 0)(`[${time}] ${groupName}: @${name} joined`));
         } else if (action === 'remove') {
-            canvas.print(font, 250, 50, 'Goodbye');
-            canvas.print(font, 250, 150, `@${name}`);
-            canvas.print(fontSmall, 250, 200, `Group: ${groupName}`);
-            canvas.print(fontSmall, 250, 250, `Time: ${time}`);
-            naxorz = await canvas.getBufferAsync(jimp.MIME_PNG);
             message = `┌────\n` +
                 `│ ⍗ *Goodbye*, @${name}\n` +
                 `│ ⍗ *Group*: ${groupName}\n` +
                 `│ ⍗ *Time*: ${time}\n` +
                 `│ ⍗ *Will be missed*\n` +
                 `└─────────────┘`;
+            console.log(chalk.rgb(255, 0, 0)(`[${time}] ${groupName}: @${name} left`));
         }
         await sock.sendMessage(id, {
-            image: naxorz,
+            image: profileBuffer,
             caption: message,
             mentions: [participant]
         });
     }
 });
-                       
+                                                             
     sock.ev.on('contacts.update', async (update) => {
         for (let contact of update) {
             let id = decodeJid(contact.id);
