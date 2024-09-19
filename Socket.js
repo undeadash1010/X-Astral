@@ -7,6 +7,7 @@ const P = require('pino');
 const fs = require('fs');
 const axios = require('axios');
 const path = require('path');
+const Jimp = require('jimp');
 const config = require('./config');
 const { languages } = require('./data_store/languages.js');
 const { commands } = require('./lib/commands');
@@ -101,7 +102,42 @@ async function startBot() {
         const contact = await sock.onWhatsApp(jid);
         return contact && contact[0] && contact[0].notify ? contact[0].notify : jid.split('@')[0];
     })
-);    let thumbnail = './lib/media/default_img.png';
+);  
+ const wats_user = msg.sender;
+const user_XP = get_XP(wats_user);
+const new_XP = user_XP + 10;
+set_XP(wats_user, new_XP);
+const new_level = get_Level(new_XP);
+const before = get_Level(user_XP);
+if (new_level > before) {
+    let profile_pic;
+    try { const get_image = await sock.profilePictureUrl(wats_user, 'image');
+        const response = await fetch(get_image);
+        profile_pic = await Jimp.read(await response.buffer());
+    } catch (error) {
+        console.error(error);
+        profile_pic = await Jimp.read('https://www.freepik.com/premium-vector/people-icon-person-symbol-vector-illustration_34470101.htm#query=blank%20profile&posit');
+    } profile_pic.resize(150, 150);  
+    const image = new Jimp(600, 250, '#1A1A1A'); 
+    image.composite(profile_pic.circle(), 100, 50); 
+    const font = await Jimp.loadFont(Jimp.FONT_SANS_32_WHITE);
+    image.print(font, 250, 50, `Level: ${new_level}`);
+    image.print(font, 250, 150, `XP: ${new_XP}`);
+    const buffer = await image.getBufferAsync(Jimp.MIME_PNG);
+    const message_cap = 
+        `⍗ *Leveled Up* ⍗\n` +
+        `╭─────\n` +
+        `│ *Congrats*: @${wats_user.split('@')[0]}\n` +
+        `│ *You've reached level*: ${new_level}\n` +
+        `│ *Keep it up* 💪\n` +
+        `╰─────`;
+    await sock.sendMessage(from, {
+        image: buffer,
+        caption: message_cap,
+        mentions: [msg.sender]
+    });
+               }
+           let thumbnail = './lib/media/default_img.png';
     try { thumbnail = await sock.profilePictureUrl(msg.sender, 'image');
       } catch (err) {
     } const audio_ptt = fs.readFileSync('./lib/media/audio.mp3');
@@ -217,42 +253,6 @@ async function startBot() {
        }
           }
       });
-const Jimp = require('jimp');
-const wats_user = msg.sender;
-const user_XP = get_XP(wats_user);
-const new_XP = user_XP + 10;
-set_XP(wats_user, new_XP);
-const new_level = get_Level(new_XP);
-const before = get_Level(user_XP);
-if (new_level > before) {
-    let profile_pic;
-    try { const get_image = await sock.profilePictureUrl(wats_user, 'image');
-        const response = await fetch(get_image);
-        profile_pic = await Jimp.read(await response.buffer());
-    } catch (error) {
-        console.error(error);
-        profile_pic = await Jimp.read('https://www.freepik.com/premium-vector/people-icon-person-symbol-vector-illustration_34470101.htm#query=blank%20profile&posit');
-    } profile_pic.resize(150, 150);  
-    const image = new Jimp(600, 250, '#1A1A1A'); 
-    image.composite(profile_pic.circle(), 100, 50); 
-    const font = await Jimp.loadFont(Jimp.FONT_SANS_32_WHITE);
-    image.print(font, 250, 50, `Level: ${new_level}`);
-    image.print(font, 250, 150, `XP: ${new_XP}`);
-    const buffer = await image.getBufferAsync(Jimp.MIME_PNG);
-    const message_cap = 
-        `⍗ *Leveled Up* ⍗\n` +
-        `╭─────\n` +
-        `│ *Congrats*: @${wats_user.split('@')[0]}\n` +
-        `│ *You've reached level*: ${new_level}\n` +
-        `│ *Keep it up* 💪\n` +
-        `╰─────`;
-
-    await sock.sendMessage(from, {
-        image: buffer,
-        caption: message_cap,
-        mentions: [msg.sender]
-    });
-                }
                                           
    if (body.startsWith(`${config.PREFIX}mute`)) {
                 if (!isGroup) {
