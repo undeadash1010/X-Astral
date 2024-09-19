@@ -298,83 +298,60 @@ if (new_level > before) {
             }
      
 sock.ev.on('group-participants.update', async (event) => {
-const { id, participants, action } = event;
-const groupMetadata = await sock.groupMetadata(id);
-const groupName = groupMetadata.subject;
-const time = new Date().toLocaleString();
-for (let participant of participants) {
-    const name = participant.split('@')[0];
-    let message;
-    let naxorz; let profile_pik;
-    try { const gets_image = await sock.profilePictureUrl(participant, 'image');
-        const response = await fetch(gets_image);
-        profile_pik = await response.buffer();
-    } catch (error) {
-        console.error(error);
-        const fallback_str = 'https://www.freepik.com/premium-vector/people-icon-person-symbol-vector-illustration_34470101.htm#query=blank%20profile&position=9&from_view=keyword&track=ais_hybrid&uuid=679974d4-3b6a-42c2-b807-b313d389fd87';
-        const response = await fetch(fallback_str);
-        profile_pik = await response.buffer();
-    } if (action === 'add') {
-        naxorz = await canvafy.createImage(600, 300)
-            .setBackgroundColor('#1A1A1A')
-            .drawCircleImage(profile_pik, { x: 100, y: 150, radius: 75 })
-            .setText('Welcome!', {
-                x: 250, y: 50, fontSize: 40, color: 'white',
-                align: 'left', stroke: 'black', strokeWidth: 3
-            })
-            .setText(`@${name}`, {
-                x: 250, y: 150, fontSize: 30, color: 'white',
-                align: 'left', stroke: 'black', strokeWidth: 2
-            })
-            .setText(`Group: ${groupName}`, {
-                x: 250, y: 200, fontSize: 25, color: 'white',
-                align: 'left', stroke: 'black', strokeWidth: 2
-            })
-            .setText(`Time: ${time}`, {
-                x: 250, y: 250, fontSize: 20, color: 'white',
-                align: 'left', stroke: 'black', strokeWidth: 2
-            })
-            .toBuffer();
-        message = `┌────\n` +
-            `│ ⍗ *Welcome* @${name}\n` +
-            `│ ⍗ *Group*: ${groupName}\n` +
-            `│ ⍗ *Time*: ${time}\n` +
-            `│ ⍗ *We are excited X3*\n` +
-            `└─────────────┘`;
-        console.log(chalk.rgb(0, 255, 0)(`[${time}] ${groupName}: @${name}`));
-    } else if (action === 'remove') {
-        naxorz = await canvafy.createImage(600, 300)
-            .setBackgroundColor('#1A1A1A')
-            .drawCircleImage(profile_pik, { x: 100, y: 150, radius: 75 })
-            .setText('Goodbye!', {
-                x: 250, y: 50, fontSize: 40, color: 'white',
-                align: 'left', stroke: 'black', strokeWidth: 3
-            })
-            .setText(`@${name}`, {
-                x: 250, y: 150, fontSize: 30, color: 'white',
-                align: 'left', stroke: 'black', strokeWidth: 2
-            })
-            .setText(`Group: ${groupName}`, {
-                x: 250, y: 200, fontSize: 25, color: 'white',
-                align: 'left', stroke: 'black', strokeWidth: 2
-            })
-            .setText(`Time: ${time}`, {
-                x: 250, y: 250, fontSize: 20, color: 'white',
-                align: 'left', stroke: 'black', strokeWidth: 2
-            })
-            .toBuffer();
-        message = `┌────\n` +
-            `│ ⍗ *Goodbye*, @${name}\n` +
-            `│ ⍗ *Group*: ${groupName}\n` +
-            `│ ⍗ *Time*: ${time}\n` +
-            `│ ⍗ *Will be missed*\n` +
-            `└─────────────┘`;
-    }  await sock.sendMessage(id, {
-        image: naxorz,
-        caption: message,
-        mentions: [participant]
-    });
-}
+    const { id, participants, action } = event;
+    const groupMetadata = await sock.groupMetadata(id);
+    const groupName = groupMetadata.subject;
+    const time = new Date().toLocaleString();
+    for (let participant of participants) {
+        const name = participant.split('@')[0];
+        let message;
+        let naxorz;
+        let profile_pik;
+        try { const gets_image = await sock.profilePictureUrl(participant, 'image');
+            const response = await fetch(gets_image);
+            profile_pik = await jimp.read(await response.buffer());
+        } catch (error) {
+            console.error(error);
+            profile_pik = await jimp.read('https://www.freepik.com/premium-vector/people-icon-person-symbol-vector-illustration_34470101.htm#query=blank%20profile&position=9&from_view=keyword&track=ais_hybrid&uuid=679974d4-3b6a-42c2-b807-b313d389fd87');
+        }   profile_pik.resize(150, 150).circle();
+        const canvas = await jimp.create(600, 300, '#1A1A1A');
+        canvas.composite(profile_pik, 50, 75);
+        const font = await jimp.loadFont(jimp.FONT_SANS_32_WHITE);
+        const fontSmall = await jimp.loadFont(jimp.FONT_SANS_16_WHITE);
+        if (action === 'add') {
+            canvas.print(font, 250, 50, 'Welcome!');
+            canvas.print(font, 250, 150, `@${name}`);
+            canvas.print(fontSmall, 250, 200, `Group: ${groupName}`);
+            canvas.print(fontSmall, 250, 250, `Time: ${time}`);
+            naxorz = await canvas.getBufferAsync(jimp.MIME_PNG);
+            message = `┌────\n` +
+                `│ ⍗ *Welcome* @${name}\n` +
+                `│ ⍗ *Group*: ${groupName}\n` +
+                `│ ⍗ *Time*: ${time}\n` +
+                `│ ⍗ *We are excited X3*\n` +
+                `└─────────────┘`;
+            console.log(chalk.rgb(0, 255, 0)(`[${time}] ${groupName}: @${name}`));
+        } else if (action === 'remove') {
+            canvas.print(font, 250, 50, 'Goodbye');
+            canvas.print(font, 250, 150, `@${name}`);
+            canvas.print(fontSmall, 250, 200, `Group: ${groupName}`);
+            canvas.print(fontSmall, 250, 250, `Time: ${time}`);
+            naxorz = await canvas.getBufferAsync(jimp.MIME_PNG);
+            message = `┌────\n` +
+                `│ ⍗ *Goodbye*, @${name}\n` +
+                `│ ⍗ *Group*: ${groupName}\n` +
+                `│ ⍗ *Time*: ${time}\n` +
+                `│ ⍗ *Will be missed*\n` +
+                `└─────────────┘`;
+        }
+        await sock.sendMessage(id, {
+            image: naxorz,
+            caption: message,
+            mentions: [participant]
+        });
+    }
+});
+                       
     sock.ev.on('contacts.update', async (update) => {
         for (let contact of update) {
             let id = decodeJid(contact.id);
