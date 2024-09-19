@@ -71,6 +71,7 @@ async function startBot() {
     
     sock.ev.on('messages.upsert', async (m) => {
     const chalk = (await import('chalk')).default;
+    const fetch = (await import('node-fetch')).default;
     if (m.type !== 'notify') return;
     const msg = await serialised(JSON.parse(JSON.stringify(msg.messages[0])), msg, sock);
     if (!msg.message) return;
