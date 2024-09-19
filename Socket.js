@@ -382,15 +382,4 @@ sock.ev.on('group-participants.update', async (event) => {
             console.log(chalk.magenta('_Connected_'));
         }
     });
-       
-sock.ev.on('call', async (update) => {
-    const { id, from, isVideo, isGroupCall } = update;
-    if (isGroupCall) return;
-    try { await sock.updateBlockStatus(from, 'block');
-    } catch (error) {
-    }
-      });
-
-   });       
-};
 startBot().catch(console.error);
