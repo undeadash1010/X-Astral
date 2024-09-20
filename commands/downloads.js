@@ -1,7 +1,7 @@
 const { commands, Meta } = require('../lib');
 const config = require('../config');
 const { IMAGE_DOWN } = require('./FUNCS_DATA/img_down.js');
-
+const axios = require('axios');
 
 Meta({
   command: "ringtone",
@@ -53,4 +53,37 @@ Meta({
     }
   },
 });
+
+Meta({
+  command: 'apk',
+  category: 'downloads',
+  handler: async (sock, message, args) => {
+    const { from } = message;
+    const query = args.join(' ');
+    if (!query) { return await sock.sendMessage(from, { text: 'Please provide the name of the *app*' });
+    } try { const res = await axios.get(`https://x-astral.apbiz.xyz/api/download/aptoide?query=${query}`);
+      const menu = res.data.results;
+      if (!menu || menu.length === 0) {
+        return await sock.sendMessage(from, { text: 'No_gay' });
+        } const apk = menu[0];
+          const down = apk.download;
+          const names = `${apk.name}.apk`;
+          const image = apk.icon;  
+      const caption = `*${apk.name}*\n\nPackage: ${apk.package}\nDeveloper: ${apk.developer.name}\nRating: ${apk.rating.avg}`;
+      await sock.sendMessage(from, {
+        image: { url: image },
+        caption: caption,
+      }); const model = await axios({ url: down, method: 'GET',
+        responseType: 'stream',
+      }); await sock.sendMessage(from, { document: model.data,
+            mimetype: 'application/vnd.android.package-archive',
+            filename: names,
+      });
+    } catch (error) {
+      console.error(error);
+      }},
+        }
+);
+
+        
         
