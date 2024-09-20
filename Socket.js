@@ -199,7 +199,7 @@ async function startBot() {
             if (!contact || !contact[0]) return;
             const contact_nemo = contact[0].notify || contact[0].jid.split('@')[0];
             const Messagei = `┌────\n` +
-                `│ ⍗ *Welcome* @${contact'nemo}\n` +
+                `│ ⍗ *Welcome* @${contact_nemo}\n` +
                 `│ ⍗ *We are excited X3*\n` +
                 `└─────────────┘`;
             await sock.sendMessage(data.id, { text: Messagei, mentions: [data.participants[0]] });
