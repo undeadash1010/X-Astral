@@ -11,7 +11,6 @@ module.exports = {
     AUTHOR_PACK: process.env.AUTHOR_PACK|| 'Naxor❤️',
     antilink: {},
     SESSION_ID: process.env.SESSION_ID || 'A-S-W-I-N-S-P-A-R-K-Y:b6853985c547d3d31bae1748926b9cd2',
-    BRAINSHOP_PRIVATE: process.env.BRAINSHOP_PRIVATE || 'false', //true
     MODE: process.env.MODE || 'private', // public
     MODS: process.env.MODS ? JSON.parse(process.env.MODS) : ['27686881509@s.whatsapp.net']
 };
