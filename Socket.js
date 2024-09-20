@@ -43,32 +43,7 @@ async function startBot() {
         }
     });
     store.bind(sock.ev);
-    sock.ev.on('creds.update', saveCreds);
-    sock.ev.on('messages.update', async (update) => {
-        for (let msg_pdate of update) {
-            if (msg_pdate.key && msg_pdate.updateType === 'message-revoke') {
-                const { remoteJid, participant } = msg_pdate.key;
-                const org = msg_pdate.message;
-                if (org) {
-                    const Content_pdate = org.conversation || org.extendedTextMessage?.text;
-                    const group_name = (await sock.groupMetadata(remoteJid)).subject;
-                    const gender = store.contacts[participant]?.name || participant.split('@')[0];
-                    if (Content_pdate) {
-                        const anti_del = `⍗ *Anti-Delete Alert* ⍗\n\n` +
-                            `⍗ *Sender*: @${gender}\n` +
-                            `⍗ *Time*: ${new Date().toLocaleString()}\n` +
-                            `⍗ *Message*: ${Content_pdate}\n` +
-                            `⍗ *Note*: Deleted`;
-                        await sock.sendMessage(remoteJid, {
-                            text: anti_del,
-                            mentions: [participant]
-                        });
-                    }
-                }
-            }
-        }
-    });
-    
+    sock.ev.on('creds.update', saveCreds);    
     sock.ev.on('messages.upsert', async (m) => {
     const chalk = (await import('chalk')).default;
     const fetch = (await import('node-fetch')).default;
@@ -105,42 +80,7 @@ if (messageMapping[msgType]) {
         const contact = await sock.onWhatsApp(jid);
         return contact && contact[0] && contact[0].notify ? contact[0].notify : jid.split('@')[0];
     })
-);  
- const wats_user = msg.sender;
-const user_XP = get_XP(wats_user);
-const new_XP = user_XP + 10;
-set_XP(wats_user, new_XP);
-const new_level = get_Level(new_XP);
-const before = get_Level(user_XP);
-if (new_level > before) {
-    let profile_pic;
-    try { const get_image = await sock.profilePictureUrl(wats_user, 'image');
-        const response = await fetch(get_image);
-        profile_pic = await Jimp.read(await response.buffer());
-    } catch (error) {
-        console.error(error);
-        profile_pic = await Jimp.read('https://www.freepik.com/premium-vector/people-icon-person-symbol-vector-illustration_34470101.htm#query=blank%20profile&posit');
-    } profile_pic.resize(150, 150);  
-    const image = new Jimp(600, 250, '#1A1A1A'); 
-    image.composite(profile_pic.circle(), 100, 50); 
-    const font = await Jimp.loadFont(Jimp.FONT_SANS_32_WHITE);
-    image.print(font, 250, 50, `Level: ${new_level}`);
-    image.print(font, 250, 150, `XP: ${new_XP}`);
-    const buffer = await image.getBufferAsync(Jimp.MIME_PNG);
-    const message_cap = 
-        `⍗ *Leveled Up* ⍗\n` +
-        `╭─────\n` +
-        `│ *Congrats*: @${wats_user.split('@')[0]}\n` +
-        `│ *You've reached level*: ${new_level}\n` +
-        `│ *Keep it up* 💪\n` +
-        `╰─────`;
-    await sock.sendMessage(from, {
-        image: buffer,
-        caption: message_cap,
-        mentions: [msg.sender]
-    });
-               }
-           let thumbnail = './lib/media/default_img.png';
+);             let thumbnail = './lib/media/default_img.png';
     try { thumbnail = await sock.profilePictureUrl(msg.sender, 'image');
       } catch (err) {
     } const audio_ptt = fs.readFileSync('./lib/media/audio.mp3');
@@ -199,13 +139,6 @@ if (new_level > before) {
             return;
         } const mention_cn = msg.message.extendedTextMessage?.contextInfo?.mentionedJid?.includes(sock.user.id);
         const rep = msg.message.extendedTextMessage?.contextInfo?.stanzaId && msg.message.extendedTextMessage.contextInfo.participant === sock.user.id;
-        if (mention_cn || rep) {
-            if (brainshop_private && !config.MODS.includes(msg.sender)) {
-                return;
-            } const uid = msg.sender.split('@')[0];
-              const query = encodeURIComponent(body.trim());
-                const res_cn = await axios.get(`http://api.brainshop.ai/get?bid=172352&key=vTmMboAxoXfsKEQQ&uid=${uid}&msg=${query}`);
-                  const reply = res_cn.data.cnt;
             await sock.sendMessage(from, { text: reply }, { quoted: msg });
             }  if (body.startsWith(`${config.PREFIX}eval`) || body.startsWith(`${config.PREFIX}$`) ||
                 body.startsWith(`${config.PREFIX}>`) || body.startsWith(`${config.PREFIX}#`)) {
@@ -325,7 +258,6 @@ sock.ev.on('group-participants.update', async (event) => {
                 `│ ⍗ *Time*: ${time}\n` +
                 `│ ⍗ *We are excited X3*\n` +
                 `└─────────────┘`;
-            console.log(chalk.rgb(0, 255, 0)(`[${time}] ${groupName}: @${name} joined`));
         } else if (action === 'remove') {
             message = `┌────\n` +
                 `│ ⍗ *Goodbye*, @${name}\n` +
@@ -333,7 +265,6 @@ sock.ev.on('group-participants.update', async (event) => {
                 `│ ⍗ *Time*: ${time}\n` +
                 `│ ⍗ *Will be missed*\n` +
                 `└─────────────┘`;
-            console.log(chalk.rgb(255, 0, 0)(`[${time}] ${groupName}: @${name} left`));
         }
         await sock.sendMessage(id, {
             image: profileBuffer,
