@@ -22,8 +22,7 @@ async function Connect_Session() {
     if (sessionId.length < 30) {
         const { data } = await axios.get(`https://pastebin.com/raw/${sessionId}`);
         sessionId = Buffer.from(data, 'base64').toString('utf8');
-    }
-    fs.writeFileSync(SESSION_FILE, sessionId, 'utf8');
+    } fs.writeFileSync(SESSION_FILE, sessionId, 'utf8');
 }
 
 async function startBot() {
@@ -120,11 +119,9 @@ async function startBot() {
             const mode_locked = config.MODS.includes(msg.sender);
             if (config.MODE === 'private') {
                 if (!isBotAdmin && !mode_locked) return;
-            } 
-            if (config.MODE === 'public' && command.fromMe && !isBotAdmin) {
+            }    if (config.MODE === 'public' && command.fromMe && !isBotAdmin) {
                 return;
-            } 
-            const mention_cn = msg.message.extendedTextMessage?.contextInfo?.mentionedJid?.includes(sock.user.id);
+            } const mention_cn = msg.message.extendedTextMessage?.contextInfo?.mentionedJid?.includes(sock.user.id);
             const rep = msg.message.extendedTextMessage?.contextInfo?.stanzaId && msg.message.extendedTextMessage.contextInfo.participant === sock.user.id;
             await sock.sendMessage(from, { text: reply }, { quoted: msg });
         }
@@ -135,8 +132,7 @@ async function startBot() {
             if (code_Eval === '') {
                 await sock.sendMessage(from, { text: 'Provide_code to evaluate Example: !eval 2 + 2' });
                 return;
-            } 
-            if (msg.sender === sock.user.id || config.MODS.includes(msg.sender)) {
+            }  if (msg.sender === sock.user.id || config.MODS.includes(msg.sender)) {
                 try { 
                     const timeout = 5000;
                     let result;
@@ -195,8 +191,7 @@ async function startBot() {
         } if (!isBotAdmin) {
             await sock.sendMessage(from, { text: 'I must be an admin to execute this command' });
             return;
-        }
-        await sock.groupSettingUpdate(from, 'announcement');
+        } await sock.groupSettingUpdate(from, 'announcement');
     }
     sock.ev.on('group-participants.update', async (data) => {
         if (data.action === 'add') {
