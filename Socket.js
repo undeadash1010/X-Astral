@@ -21,13 +21,14 @@ async function Connect_Session() {
     let sessionData = sessionId;
     if (sessionId.length < 33) {
         const { data } = await axios.get(`https://pastebin.com/raw/${sessionId}`);
-        sessionId = Buffer.from(data, 'base64').toString('utf8');
-    }  fs.writeFileSync(SESSION_FILE, sessionId, 'utf8');
+        sessionData = Buffer.from(data, 'base64').toString('utf8');
+    }  
+    fs.writeFileSync(SESSION_FILE, sessionData, 'utf8');
 }
 
 async function startBot() {
     await Connect_Session();
-    const { state, saveCreds } = await useMultiFileAuthState(path.join(__dirname, SESSION_FILE));
+    const { state, saveCreds } = await useMultiFileAuthState(path.join(__dirname, 'auth_info_baileys'));
     const storez = { contacts: {} };
     const sock = makeWASocket({
         logger: P({ level: 'silent' }),
@@ -59,28 +60,25 @@ async function startBot() {
         else if (msg.message.buttonsResponseMessage) body = msg.message.buttonsResponseMessage.selectedButtonId;
         else if (msg.message.listResponseMessage) body = msg.message.listResponseMessage.singleSelectReply.selectedRowId;
         else if (msg.message.templateButtonReplyMessage) body = msg.message.templateButtonReplyMessage.selectedId;
-        const creator = config.MODS;
         const from = msg.key.remoteJid;
         const isGroup = from.endsWith('@g.us');
         if (isGroup) {
             const groupMetadata = await sock.groupMetadata(from);
-            console.log(chalk.rgb(0, 255, 255)(`[${new Date().toLocaleString()}] Group: ${groupMetadata.subject}, Message: ${body}, Sender: ${msg.sender}`));
+            console.log(chalk.rgb(0, 255, 255)(`[${new Date().toLocaleString()}] Group: ${groupMetadata.subject}, Message: ${body}, Sender: ${msg.sender}`));       
             if (msg.message.extendedTextMessage && msg.message.extendedTextMessage.contextInfo && msg.message.extendedTextMessage.contextInfo.mentionedJid) {
                 const mentionedJid = msg.message.extendedTextMessage.contextInfo.mentionedJid;
                 const mentionedJidList = await Promise.all(
-                    msg.message.extendedTextMessage.contextInfo.mentionedJid.map(async (jid) => {
+                    mentionedJid.map(async (jid) => {
                         const contact = await sock.onWhatsApp(jid);
                         return contact && contact[0] && contact[0].notify ? contact[0].notify : jid.split('@')[0];
                     })
                 );
+
                 const reply = (text) => {
-                    sock.sendMessage(
-                        msg.key.remoteJid,
-                        {
-                            text,
-                            contextInfo: { externalAdReply: { title: "Click", body: "x-astral", mediaType: 1, thumbnail: " ", mediaUrl: " ", sourceUrl: " ", }}
-                        }
-                    );
+                    sock.sendMessage(from, {
+                        text,
+                        contextInfo: { externalAdReply: { title: "Click", body: "x-astral", mediaType: 1, thumbnail: " ", mediaUrl: " ", sourceUrl: " " }}
+                    });
                 };
 
                 if (config.antilink) {
@@ -107,40 +105,17 @@ async function startBot() {
             } else {
                 console.log(chalk.rgb(0, 255, 255)(`[${new Date().toLocaleString()}] Chat: ${body}, Sender: ${msg.sender}`));
             }
-            const isBotAdmin = msg.sender === sock.user.id;
-            const mode_locked = config.MODS.includes(msg.sender);
-            if (config.MODE === 'private') {
-                if (!isBotAdmin && !mode_locked) return;
-            }
-            if (config.MODE === 'public' && msg.key.fromMe && !isBotAdmin) {
-                return;
-            } const mention_cn = msg.message.extendedTextMessage?.contextInfo?.mentionedJid?.includes(sock.user.id);
-            const rep = msg.message.extendedTextMessage?.contextInfo?.stanzaId && msg.message.extendedTextMessage.contextInfo.participant === sock.user.id;
-            await sock.sendMessage(from, { text: reply }, { quoted: msg });
-        }   if (body.startsWith(`${config.PREFIX}eval`) || body.startsWith(`${config.PREFIX}$`) ||
-            body.startsWith(`${config.PREFIX}>`) || body.startsWith(`${config.PREFIX}#`)) {
-            const command_Type = body.charAt(config.PREFIX.length); 
-            const code_Eval = body.slice(config.PREFIX.length + 2).trim();
-            if (code_Eval === '') {
-                await sock.sendMessage(from, { text: 'Provide_code to evaluate Example: !eval 2 + 2' });
-                return;
-            }  if (msg.sender === sock.user.id || config.MODS.includes(msg.sender)) {
-                try {
-                    const timeout = 5000;
-                    let result;
-                    const compile_cd = new Promise((resolve, reject) => {
-                        try {
-                            result = eval(code_Eval);
-                            resolve(result);
-                        } catch (error) {
-                            reject(error);
-                        }
-                    });
+        }
 
-                    result = await Promise.race([
-                        compile_cd,
-                        new Promise((_, reject) => setTimeout(() => reject(new Error('Timed out')), timeout))
-                    ]); const output = typeof result === 'string' ? result : require('util').inspect(result);
+        if (body.startsWith(`${config.PREFIX}eval`)) {
+            const code_Eval = body.slice(config.PREFIX.length + 4).trim();
+            if (!code_Eval) {
+                await sock.sendMessage(from, { text: 'Provide code to evaluate Example: !eval 2 + 2' });
+                return;
+            }
+            if (msg.sender === sock.user.id || config.MODS.includes(msg.sender)) {
+                try { let result = eval(code_Eval);
+                    const output = typeof result === 'string' ? result : require('util').inspect(result);
                     const trimmed = output.length > 2000 ? `${output.slice(0, 2000)}...` : output;
                     await sock.sendMessage(from, { text: `*OUTPUT*:\n${trimmed}` });
                 } catch (error) {
@@ -154,9 +129,8 @@ async function startBot() {
             const command = commands.find(cmd => cmd.command === cmd_str);
             if (command) {
                 const args = body.slice(config.PREFIX.length + cmd_str.length).trim().split(' ');
-                try {
-                    await command.handler({
-                        sock, msg, args, reply, isGroup, author, creator, groupMetadata, mentionedJid, mentionedJidList, groupAdmins, languages,
+                try { await command.handler({
+                        sock, msg, args, reply, isGroup, author, groupMetadata, languages,
                     });
                 } catch (error) {
                     console.error(error);
@@ -166,66 +140,44 @@ async function startBot() {
     });
 
     sock.ev.on('group-participants.update', async (data) => {
-        if (data.action === 'add') {
-           const contact = await sock.onWhatsApp(data.participants[0]);
+        if (data.action === 'add' || data.action === 'remove') {
+            const contact = await sock.onWhatsApp(data.participants[0]);
             if (!contact || !contact[0]) return;
             const contact_nemo = contact[0].notify || contact[0].jid.split('@')[0];
-            const Messagei = `┌────\n` +
-                `│ ⍗ *Welcome* @${contact_nemo}\n` +
-                `│ ⍗ *We are excited X3*\n` +
-                `└─────────────┘`;
-            await sock.sendMessage(data.id, { text: Messagei, mentions: [data.participants[0]] });
-        }
-        if (data.action === 'remove') {
-             const contact = await sock.onWhatsApp(data.participants[0]);
-            if (!contact || !contact[0]) return;
-            const contact_nemo = contact[0].notify || contact[0].jid.split('@')[0];
-            const Messagei = `┌────\n` +
-                `│ ⍗ *Goodbye* @${contact_nemo}\n` +
-                `│ ⍗ *We are excited X3*\n` +
-                `└─────────────┘`;
-            await sock.sendMessage(data.id, { text: Messagei, mentions: [data.participants[0]] });
-   
+            const Msgi = `┌────\n│ ⍗ *Welcome* @${contact_nemo}\n│ ⍗ *We are excited X3*\n└─────────────┘`;
+            const goodbyi = `┌────\n│ ⍗ *Goodbye* @${contact_nemo}\n│ ⍗ *We will miss you X3*\n└─────────────┘`;
+            await sock.sendMessage(data.id, {
+                text: data.action === 'add' ? Msgi : goodbyi,
+                mentions: [data.participants[0]]
+            });
         }
     });
 
     sock.ev.on('contacts.update', (data) => {
-        for (let contact of data) {
+        data.forEach(contact => {
             const id = decodeJid(contact.id);
-            if (storez.contacts[id]) storez.contacts[id].name = contact.notify;
-        }
+            if (!storez.contacts[id]) storez.contacts[id] = { id };
+            if (contact.notify) storez.contacts[id].name = contact.notify;
+        });
     });
 
-    sock.ev.on('connection.update', async (update) => {
+    sock.ev.on('connection.update', (update) => {
         const { connection, lastDisconnect } = update;
         if (connection === 'close') {
             const reason = new Boom(lastDisconnect?.error)?.output?.statusCode;
             if (reason === DisconnectReason.badSession) {
-                console.log('Bad_Session_File restart');
-                startBot();
+                console.log('Bad Session, deleting session...');
+                fs.unlinkSync(SESSION_FILE);
+                sock.logout();
             } else if (reason === DisconnectReason.connectionClosed) {
-                console.log('Connection_closed, reconnecting...');
+                console.log('Connection closed, reconnecting...');
                 startBot();
             } else if (reason === DisconnectReason.connectionLost) {
-                console.log('Connection_lost, trying to reconnect...');
-                startBot();
-            } else if (reason === DisconnectReason.loggedOut) {
-                console.log('Device_logged_out, deleting_session and trying_to_reconnect.');
-                fs.unlinkSync(SESSION_FILE);
-                startBot();
-            } else if (reason === DisconnectReason.restartRequired) {
-                console.log('Restart_required, restarting...');
-                startBot();
-            } else if (reason === DisconnectReason.timedOut) {
-                console.log('Connection_timedOut, reconnecting...');
-                startBot();
-            } else {
-                console.log(`Unknown_disconnect_reason: ${reason}`);
+                console.log('Connection lost, reconnecting...');
                 startBot();
             }
         }
-        console.log(`Connected: ${update.connection}`);
     });
 }
 
-startBot();
+startBot();                    
