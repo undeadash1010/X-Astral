@@ -65,7 +65,7 @@ Meta({
       const down = apk.download;
       const names = `${apk.name}.apk`;
       const image = apk.icon;  
-      const caption = `*${toTiny(apk.name)}*\n\n${toTiny(Package)}: ${toTiny(apk.package)}\n${toTiny(Developer)}: ${toTiny(apk.developer.name)}\n${toTiny(Rating)}: ${toTiny(apk.rating.avg)}`;
+      const caption = `*${toTiny(apk.name)}*\n\n${toTiny('Package')}: ${toTiny(apk.package)}\n${toTiny('Developer')}: ${toTiny(apk.developer.name)}\n${toTiny('Rating')}: ${toTiny(apk.rating.avg)}`;
       await sock.sendMessage(from, {
         image: { url: image }, caption: caption,
       }); const model = await axios({ url: down, method: 'GET',
