@@ -154,6 +154,9 @@ async function startBot() {
 
     sock.ev.on('connection.update', (update) => {
         const { connection, lastDisconnect } = update;
+	if (connection === "open") {
+		console.log("Connected");
+	} else {
         if (connection === 'close') {
             const reason = new Boom(lastDisconnect?.error)?.output?.statusCode;
             if (reason === DisconnectReason.badSession) {
@@ -168,7 +171,7 @@ async function startBot() {
                 startBot();
             }
         }
-    });
+    }});
 }
 
 startBot();                    
