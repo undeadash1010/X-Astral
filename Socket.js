@@ -19,7 +19,7 @@ async function Connect_Session() {
     if (fs.existsSync(SESSION_FILE)) return;
     const sessionId = config.SESSION_ID.replace("A-S-W-I-N-S-P-A-R-K-Y:", "");
     let sessionData = sessionId;
-    if (sessionId.length < 30) {
+    if (sessionId.length < 33) {
         const { data } = await axios.get(`https://pastebin.com/raw/${sessionId}`);
         sessionId = Buffer.from(data, 'base64').toString('utf8');
     }  fs.writeFileSync(SESSION_FILE, sessionId, 'utf8');
