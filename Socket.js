@@ -11,7 +11,7 @@ const Jimp = require('jimp');
 const config = require('./config');
 const { languages } = require('./data_store/languages.js');
 const { commands } = require('./lib/commands');
-const { serialize, decodeJid } = require('./lib/serialize');
+const { serialize, decodeJid } = require('./lib/message');
 const store = makeInMemoryStore({ logger: P().child({ level: "silent", stream: "store", }), });
 const SESSION_FILE = path.join(__dirname, 'auth_info_baileys', 'creds.json');
 
