@@ -12,11 +12,12 @@ const config = require('./config');
 const { languages } = require('./data_store/languages.js');
 const { commands } = require('./lib/commands');
 const { serialize, decodeJid } = require('./lib/message');
+const session = require('./lib/session');
 const store = makeInMemoryStore({ logger: P().child({ level: "silent", stream: "store", }), });
 
 async function startBot() {
-    const Dir = "../session";
-	await fs.mkdir(sessionDir, { recursive: true });
+    const Dir = "../auth_info_baileys";
+	await fs.mkdir(Dir, { recursive: true });
 	await session();    
     const { state, saveCreds } = await useMultiFileAuthState(path.join(__dirname, Dir));
     const storez = { contacts: {} };
