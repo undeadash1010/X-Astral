@@ -11,7 +11,7 @@ const Jimp = require('jimp');
 const config = require('./config');
 const { languages } = require('./data_store/languages.js');
 const { commands } = require('./lib/commands');
-const { serialised, decodeJid } = require('./lib/serialize');
+const { serialize, decodeJid } = require('./lib/serialize');
 const store = makeInMemoryStore({ logger: P().child({ level: "silent", stream: "store", }), });
 const SESSION_FILE = path.join(__dirname, 'auth_info_baileys', 'creds.json');
 
@@ -46,7 +46,7 @@ async function startBot() {
         const chalk = (await import('chalk')).default;
         const fetch = (await import('node-fetch')).default;
         if (m.type !== 'notify') return;
-        const msg = await serialised(JSON.parse(JSON.stringify(m.messages[0])), m, sock);
+        const msg = await serialize(JSON.parse(JSON.stringify(m.messages[0])), m, sock);
         if (!msg.message) return;
         const sendd = msg.sender;
         const contact = store.contacts[sendd] || {};
