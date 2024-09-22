@@ -12,7 +12,7 @@ const session = require('./lib/session');
 const store = makeInMemoryStore({ logger: P().child({ level: "silent", stream: "store" }) });
 
 async function startBot() {
-    const Dir = "../auth_info_baileys";
+    const Dir = "./auth_info_baileys";
     await fs.mkdirSync(Dir, { recursive: true });
     await session();
     const { state, saveCreds } = await useMultiFileAuthState(path.join(__dirname, Dir));
