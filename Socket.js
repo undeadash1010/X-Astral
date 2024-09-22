@@ -8,14 +8,21 @@ const config = require('./config');
 const { languages } = require('./data_store/languages.js');
 const { commands } = require('./lib/commands');
 const { serialize, decodeJid } = require('./lib/message');
-const session = require('./lib/session');
+const { connect } = require('./lib/session');
 const store = makeInMemoryStore({ logger: P().child({ level: "silent", stream: "store" }) });
 
 async function startBot() {
     const Dir = "./auth_info_baileys";
-    await fs.mkdirSync(Dir, { recursive: true });
-    await session();
-    const { state, saveCreds } = await useMultiFileAuthState(path.join(__dirname, Dir));
+    fs.mkdirSync(Dir, { recursive: true });
+    let sessionId;
+    try { sessionId = await connect();
+    } catch (err) {
+      console.error(err.message);
+      process.exit(1);
+    } if (!sessionId) {
+        console.error('err');
+       process.exit(1);
+}   const { state, saveCreds } = await useMultiFileAuthState(path.join(__dirname, Dir), sessionId);
     const storez = { contacts: {} };
     const sock = makeWASocket({
         logger: P({ level:'silent' }),
@@ -27,10 +34,9 @@ async function startBot() {
                 conversation:'owner is diego call me naxor'
             }
         }
-    });
+    });                            
     store.bind(sock.ev);
     sock.ev.on('creds.update', saveCreds);
-
     sock.ev.on('messages.upsert', async (m) => {
         const chalk = (await import('chalk')).default;
         const fetch = (await import('node-fetch')).default;
