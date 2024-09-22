@@ -1,4 +1,4 @@
-const { commands, Meta } = require('../lib/');
+const { commands, Meta } = require('../lib/commands');
 const { MessageType, WA_DEFAULT_EPHEMERAL } = require('@whiskeysockets/baileys');
 const config = require('../config');
 Meta({

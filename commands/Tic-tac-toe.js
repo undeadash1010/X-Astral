@@ -1,4 +1,4 @@
-const { commands, Meta } = require('../lib/');
+const { commands, Meta } = require('../lib/commands');
 const X_TicTacToe = require('../data_store/tic-tac-toe.d.js');
 
 Meta({

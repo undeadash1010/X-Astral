@@ -1,4 +1,4 @@
-const { commands, Meta } = require('../lib/');
+const { commands, Meta } = require('../lib/commands');
 const { MessageType } = require('@whiskeysockets/baileys');
 const axios = require('axios');
 const config = require('../config')

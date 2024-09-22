@@ -1,4 +1,4 @@
-const { commands, Meta } = require('../lib/');
+const { commands, Meta } = require('../lib/commands');
 const connect_four = require('../data_store/Connect.d.js');
 const games = {};
 
