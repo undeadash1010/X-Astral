@@ -15,25 +15,23 @@ async function startBot() {
     const Dir = "./auth_info_baileys";
     fs.mkdirSync(Dir, { recursive: true });
     let sessionId;
-    try { sessionId = await connect();
+    try { sessionId = await connect();  
     } catch (err) {
-      console.error(err.message);
-      process.exit(1);
-    } if (!sessionId) {
-        console.error('err');
-       process.exit(1);
-}   const { state, saveCreds } = await useMultiFileAuthState(path.join(__dirname, Dir), sessionId);
+     console.error(err.message);
+        process.exit(1);
+    }  if (!sessionId) {
+      console.error('No valid session ID');
+        process.exit(1);
+    }    const { state, saveCreds } = await useMultiFileAuthState(path.join(__dirname, Dir), sessionId);
     const storez = { contacts: {} };
     const sock = makeWASocket({
-        logger: P({ level:'silent' }),
+        logger: P({ level: 'silent' }),
         printQRInTerminal: false,
         browser: Browsers.windows('Firefox'),
         auth: state,
-        getMessage: async () => {
-            return {
-                conversation:'owner is diego call me naxor'
-            }
-        }
+        getMessage: async () => ({
+            conversation: 'owner is diego call me naxor'
+        })
     });                            
     store.bind(sock.ev);
     sock.ev.on('creds.update', saveCreds);
