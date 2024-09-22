@@ -15,16 +15,7 @@ async function startBot() {
 	const Dir = "./session";
 	fs.mkdirSync(Dir, { recursive: true });
 	let sessionId;
-	try {
-		sessionId = await connect();
-	} catch (err) {
-		console.error(err.message);
-		process.exit(1);
-	}
-	if (!sessionId) {
-		console.error("No valid session ID");
-		process.exit(1);
-	}
+	sessionId = await connect();
 	const { state, saveCreds } = await useMultiFileAuthState(path.join(__dirname, Dir), sessionId);
 	const storez = { contacts: {} };
 	const sock = makeWASocket({
