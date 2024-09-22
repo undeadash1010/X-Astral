@@ -10,7 +10,8 @@
 		"postinstall": "find node_modules -name '*.ts' -type f -delete && find node_modules -name 'tsconfig.json' -delete"
 	},
 	"dependencies": {
-		"@whiskeysockets/baileys": "^6.7.7",
+		"baileys": "*",
+		"@whiskeysockets/baileys": "*",
 		"axios": "^1.7.2",
 		"chalk": "latest",
 		"pino": "latest",
