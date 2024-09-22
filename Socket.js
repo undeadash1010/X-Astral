@@ -158,6 +158,11 @@ async function startBot() {
       console.log("Connecting to WhatsApp...<=Please Wait=>");
       else if (connection === "open") {
       console.log("Login_done✊");
+      fs.readdirSync(__dirname + "/commands").forEach((plugin) => {
+      if (path.extname(plugin).toLowerCase() == ".js") {
+      require(__dirname + "/commands/" + plugin);
+      }});
+      console.log("Plugins Installed🕹️");
       } else if (connection === "close") {
       if (
       lastDisconnect.error?.output?.statusCode !== DisconnectReason.loggedOut
