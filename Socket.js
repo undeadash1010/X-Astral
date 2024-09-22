@@ -153,25 +153,25 @@ async function startBot() {
     });
 
     sock.ev.on('connection.update', (update) => {
-        const { connection, lastDisconnect } = update;
-	if (connection === "open") {
-		console.log("Connected");
-	} else {
-        if (connection === 'close') {
-            const reason = new Boom(lastDisconnect?.error)?.output?.statusCode;
-            if (reason === DisconnectReason.badSession) {
-                console.log('Bad Session, deleting session...');
-                fs.unlinkSync(SESSION_FILE);
-                sock.logout();
-            } else if (reason === DisconnectReason.connectionClosed) {
-                console.log('Connection closed, reconnecting...');
-                startBot();
-            } else if (reason === DisconnectReason.connectionLost) {
-                console.log('Connection lost, reconnecting...');
-                startBot();
-            }
+      const { connection, lastDisconnect } = s;
+      if (connection === "connecting")
+      console.log("Connecting to WhatsApp...<=Please Wait=>");
+      else if (connection === "open") {
+      console.log("Login_done✊");
+      } else if (connection === "close") {
+      if (
+      lastDisconnect.error?.output?.statusCode !== DisconnectReason.loggedOut
+      ) {
+      startBot();
+      console.log("Reconnecting");
+      } else {
+      console.log("Connection closed_Device logged out=>");
+      await delay(3000);
+      process.exit(0);
+    }
+
         }
-    }});
+    });
 }
 
 startBot();                    
