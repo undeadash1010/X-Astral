@@ -1,4 +1,4 @@
-const { commands, Meta } = require('../lib/');
+const { commands, Meta } = require('../lib/commands');
 const config = require('../config.js');
 const { writeFileSync } = require('fs');
 const { MessageType, Mimetype } = require('@whiskeysockets/baileys');

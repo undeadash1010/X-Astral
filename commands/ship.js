@@ -1,4 +1,4 @@
-const { commands, Meta } = require('../lib/');
+const { commands, Meta } = require('../lib/commands');
 const fetch = require('node-fetch');
 const jimp = require('jimp');
 

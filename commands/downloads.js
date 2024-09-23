@@ -14,7 +14,7 @@ Meta({
       const res = await axios.get(`https://x-astral.apbiz.xyz/api/search/ringtone?query=${query}`);
       return res.data;
     }; fetched()
-      .then(ringtones => {
+      .then(async ringtones => {
         if (ringtones.length === 0) {
           await reply("No_gay");
         } const ringtone = ringtones[0];

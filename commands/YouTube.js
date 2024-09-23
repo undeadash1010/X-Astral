@@ -1,4 +1,4 @@
-const { commands, Meta } = require('../lib/');
+const { commands, Meta } = require('../lib/commands');
 const { searchAndDownload, downloadYouTubeVideo, downloadYouTubeAudio, getYoutubeThumbnail, bytesToSize, generateId } = require('../lib/youtubei.js');
 const fs = require('fs');
 const path = require('path');
