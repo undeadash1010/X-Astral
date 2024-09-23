@@ -139,7 +139,7 @@ if (action === 'enable') {
     }
   }
 });
-sock.on('message', async message => {
+/*sock.on('message', async message => {
   const { from, body } = message;
   const args = body.trim().split(/\s+/);
   const cmd_naxor = args[0].toLowerCase();
@@ -153,7 +153,7 @@ sock.on('message', async message => {
     await command.handler(sock, message, args);
   }
 });
-
+*/
 Meta({
   command: 'status',
   category: 'owner',
