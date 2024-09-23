@@ -28,14 +28,11 @@ Meta({
         await downloadYouTubeAudio(queryUrl, outputFilePath);
       } else {
         await searchAndDownload(queryUrl, outputFilePath, 'audio');
-      }
-
-      if (fs.existsSync(outputFilePath)) {
+      }  if (fs.existsSync(outputFilePath)) {
         const stats = fs.statSync(outputFilePath);
         const fileSize = bytesToSize(stats.size);
         const audioId = generateId(queryUrl);
         const thumbnailId = await getYoutubeThumbnail(audioId);
-
         await sock.sendMessage(from, {
           audio: { url: outputFilePath },
           mimetype: 'audio/mp4',
@@ -62,7 +59,6 @@ Meta({
     try {
       const { from } = message;
       const audioUrl = args.join(' ').trim();
-
       if (!audioUrl) {
         return await sock.sendMessage(from, {
           text: 'Provide YouTube url',
@@ -71,7 +67,6 @@ Meta({
 
       const filePath = path.join(__dirname, 'temp_audio.mp3');
       await downloadYouTubeAudio(audioUrl, filePath);
-
       if (fs.existsSync(filePath)) {
         const stats = fs.statSync(filePath);
         const fileSize = bytesToSize(stats.size);
@@ -104,7 +99,6 @@ Meta({
     try {
       const { from } = message;
       const videoUrl = args.join(' ').trim();
-
       if (!videoUrl) {
         return await sock.sendMessage(from, {
           text: 'Provide YouTube url',
@@ -112,9 +106,7 @@ Meta({
       }
 
       const filePath = path.join(__dirname, 'temp_video.mp4');
-
       await downloadYouTubeVideo(videoUrl, filePath);
-
       if (fs.existsSync(filePath)) {
         const stats = fs.statSync(filePath);
         const fileSize = bytesToSize(stats.size);
@@ -141,7 +133,6 @@ Meta({
     try {
       const { from } = message;
       const search = args.join(' ').trim();
-
       if (!search) {
         return await sock.sendMessage(from, {
           text: 'Provide name/url',
@@ -149,14 +140,11 @@ Meta({
       }
 
       const filePath = path.join(__dirname, 'temp_video.mp4');
-
       if (search.startsWith('http')) {
         await downloadYouTubeVideo(search, filePath);
       } else {
         await searchAndDownload(search, filePath, 'video');
-      }
-
-      if (fs.existsSync(filePath)) {
+      }   if (fs.existsSync(filePath)) {
         const stats = fs.statSync(filePath);
         const fileSize = bytesToSize(stats.size);
         const videoId = generateId(search);
