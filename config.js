@@ -10,7 +10,7 @@ module.exports = {
 	PACKNAME: process.env.PACKNAME || "Astrial❤️",
 	AUTHOR_PACK: process.env.AUTHOR_PACK || "Naxor❤️",
 	antilink: {},
-	SESSION_ID: process.env.SESSION_ID || "Session~PBBaQLt1",
+	SESSION_ID: process.env.SESSION_ID || "Session~sQd5f0e5",
 	MODE: process.env.MODE || "private", // public
 	MODS: process.env.MODS ? JSON.parse(process.env.MODS) : ["27686881509@s.whatsapp.net"],
 };
