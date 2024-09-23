@@ -1,4 +1,4 @@
-const Battleship = require("../data_store/Battleship.d.js");
+const Battleship = require("../data_store/battleship.d.js");
 const { commands, Meta } = require("../lib/commands");
 const instances = {};
 
