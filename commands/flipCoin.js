@@ -1,4 +1,4 @@
-const { Meta } = require('../lib');
+/*const { Meta } = require('../lib');
 const config = require('../config');
 
 Meta({
@@ -110,4 +110,4 @@ sock.on('message', async (message) => {
       }
     }
   }
-});          
+});          */
