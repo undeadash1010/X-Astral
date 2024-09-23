@@ -293,7 +293,7 @@ Meta({
   }
 });   
 
-const moment = require('moment');
+/*const moment = require('moment');
 Meta({
     command: 'group_stats',
     category: 'group',
@@ -360,7 +360,7 @@ const logMessage = (groupJid, partJid) => {
     const participant = message.participant || message.key.participant || message.key.remoteJid;
     logMessage(from, participant);
 });
-
+*/
 Meta({
     command: 'admin_list',
     category: 'group',
@@ -398,7 +398,7 @@ Meta({
     }
 });
 
-Meta({
+/*Meta({
     command: 'clear_msg',
     category: 'group',
     handler: async (sock, message) => {
@@ -446,7 +446,7 @@ sock.ev.on('messages.upsert', async () => {
         }
     }
 });
-
+*/
 Meta({
   command: 'warn',
   category: 'groups',
