@@ -38,7 +38,7 @@ Meta({
   },
 });
                            
-Meta({
+/*Meta({
   command: 'search',
   category: 'downloads',
   filename: __filename,
@@ -91,4 +91,4 @@ Meta({
       }
     });
   }
-});
+});*/
