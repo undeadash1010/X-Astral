@@ -3,12 +3,13 @@ const P = require("pino");
 const fs = require("fs");
 const axios = require("axios");
 const path = require("path");
+const config = require('./config');
 const { Boom } = require('@hapi/boom');
 const { serialize, decodeJid } = require('./lib/message');
 const { commands } = require("./lib/commands");
 const { connect } = require("./lib/session");
 const store = makeInMemoryStore({ logger: P().child({ level: "silent", stream: "store" }) });
-const chalk = require("chalk"); // Assuming chalk is being used for colored console output
+const chalk = require("chalk"); 
 
 function loadPlugins() {
     console.log(chalk.yellow('Installing plugins...'));
@@ -36,7 +37,6 @@ async function startBot() {
 
     store.bind(sock.ev);
     sock.ev.on('creds.update', saveCreds);
-
     sock.ev.on('connection.update', (update) => {
         const { connection, lastDisconnect } = update;
 
@@ -66,8 +66,8 @@ async function startBot() {
 
         const { from, body } = msg;
         console.log(chalk.blue(`=FROM=: ${msg.isGroup ? 'Group' : 'User'}: ${from} : =CONTENT=: ${body}`));
-
-        const text = 'Response message'; 
+        const args = body.trim().split(/ +/).slice(1)
+        const text = q = args.join(" ")
         await sock.sendMessage(from, {
             text,
             contextInfo: { 
