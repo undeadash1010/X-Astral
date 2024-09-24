@@ -78,7 +78,7 @@ async function startBot() {
             const command = commands.find(cmd => cmd.command === strippedCommand);
             if (command) {
                    try {
-                    await command.handler(sock, msg, isGroup, reply); 
+                    await command.action(sock, msg, isGroup, reply); 
                 } catch (err) {
                     console.error(err);
                 }
